@@ -1,0 +1,3 @@
+# Prototype: not for search engines yet.
+User-agent: *
+Disallow: /

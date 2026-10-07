@@ -1,0 +1,28 @@
+/* The in-flow surface: translucent white with a white inner edge and a soft
+   slate shadow. Not blurred (blur is for floating things only). */
+.card {
+  min-width: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+}
+.pad-none { padding: 0; }
+.pad-md { padding: var(--space-4); }
+.pad-lg { padding: var(--space-6); }
+
+@media (max-width: 640px) {
+  .pad-lg { padding: var(--space-4); }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.aside {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}

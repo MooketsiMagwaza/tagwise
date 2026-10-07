@@ -1,0 +1,81 @@
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item {
+  border-bottom: 1px solid var(--color-separator);
+}
+.item:last-child {
+  border-bottom: 0;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4) 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+.action:hover .text > :first-child {
+  color: var(--color-accent-text);
+}
+
+/* The unread marker keeps its space when hidden so titles stay aligned. */
+.dot {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.4375rem;
+  border-radius: 50%;
+}
+.unread {
+  background: var(--color-accent);
+}
+
+.icon {
+  flex: 0 0 auto;
+  margin-top: 0.125rem;
+  color: var(--color-text-secondary);
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.trailing {
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+  padding-left: var(--space-3);
+  color: var(--color-text-tertiary);
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* A row whose trailing controls are buttons of their own: the row's button and
+   the controls sit side by side. */
+.split {
+  display: flex;
+  align-items: flex-start;
+}
+.split .action {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+}
+.beside {
+  flex: 0 0 auto;
+  padding: var(--space-4) 0 var(--space-4) var(--space-3);
+}

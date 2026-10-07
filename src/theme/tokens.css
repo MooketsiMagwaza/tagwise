@@ -1,0 +1,224 @@
+/* Tagwise design tokens: the one place colour, type, shape, space and motion
+   are decided. Components read these names and never hard-code a value.
+
+   The look is "quiet glass for tables": a cool slate-white canvas with two
+   faint washes (amber top-left, slate blue bottom-right), translucent white
+   surfaces with a white inner edge and a soft slate shadow, one primary
+   action per screen in ink, and tag amber used sparingly as the brand spot
+   (the logo, the scan frame, label edges). Tables stay flat and legible:
+   hairlines, tabular figures, no zebra stripes.
+
+   Rules (see docs/DESIGN.md):
+   - The only gradients are the two canvas washes. Never on buttons, text or icons.
+   - Blur only on things that float over content (sidebar on phones, top bar,
+     dialogs, popovers). In-flow cards are translucent but not blurred.
+   - Anything that sits over text uses --color-glass or --color-surface-solid.
+
+   Contrast (WCAG AA, measured with the translucent surface composited over
+   the canvas): text 16:1 light / 14:1 dark, secondary 6.9 / 7.9, tertiary
+   4.6 / 5.3, control borders 3.0 / 4.6, link blue 5.9 / 8.3, status tones
+   5.4 to 6.4 light and 7.6 to 10.2 dark, white on the ink action 17.5. */
+
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  /* ── canvas ─────────────────────────────────────────────────────────── */
+  --color-bg: #f3f5f7;
+  --wash:
+    radial-gradient(90% 55% at 0% 0%, rgb(252 236 196 / 0.75) 0%, rgb(252 236 196 / 0) 62%),
+    radial-gradient(80% 60% at 100% 100%, rgb(214 228 246 / 0.9) 0%, rgb(214 228 246 / 0) 70%),
+    linear-gradient(180deg, #f7f8fa 0%, #f1f4f7 100%);
+
+  /* ── surfaces ───────────────────────────────────────────────────────── */
+  --color-surface: rgb(255 255 255 / 0.72);      /* in-flow cards, table panels */
+  --color-surface-solid: #ffffff;                /* menus, dialogs, inputs */
+  --color-fill: rgb(30 45 65 / 0.06);            /* recessed controls, chips */
+  --color-fill-hover: rgb(30 45 65 / 0.1);
+  --color-row-hover: rgb(30 45 65 / 0.035);
+  --color-glass: rgb(250 251 252 / 0.8);         /* floating chrome */
+  --color-glass-strong: rgb(255 255 255 / 0.94); /* popovers, dialogs */
+  --blur-glass: saturate(160%) blur(18px);
+  --color-scrim: rgb(16 24 34 / 0.34);
+  --color-separator: rgb(20 30 45 / 0.1);
+  --color-border: #838d9b;                       /* control borders, 3:1 */
+  --color-inverse: #141a21;
+  --color-on-inverse: #f3f5f7;
+
+  /* ── text ───────────────────────────────────────────────────────────── */
+  --color-text: #141a21;
+  --color-text-secondary: #4a5562;
+  --color-text-tertiary: #636e7d;
+
+  /* ── action: the one primary thing is ink; blue is for links and selection ── */
+  --color-accent: #141a21;
+  --color-accent-hover: #2a333e;
+  --color-accent-active: #39434f;
+  --color-on-accent: #ffffff;
+  --color-accent-text: #1d5bb8;
+  --color-accent-soft: #e2ebfa;
+  --color-focus: #1d5bb8;
+
+  /* ── brand: tag amber ───────────────────────────────────────────────── */
+  --color-brand: #f2a516;       /* decoration only: logo, scan frame, label edge */
+  --color-brand-ink: #7a4b00;   /* text on --color-brand-soft */
+  --color-brand-soft: #fcefd0;
+
+  /* ── status tones (soft fills are derived by components with color-mix) ── */
+  --color-success: #18723a;
+  --color-warning: #955000;
+  --color-danger: #b42318;
+  --color-danger-fill: #b42318;
+  --color-danger-fill-hover: #961d14;
+  --color-success-on-inverse: #5fd38c;
+  --color-danger-on-inverse: #ff8f85;
+  --color-indigo: #1d5bb8;
+  --color-teal: #0e6f73;
+
+  /* ── data colours: sites and charts only, never chrome ──────────────── */
+  --color-data-1: #1d5bb8;
+  --color-data-2: #c2620a;
+  --color-data-3: #0e6f73;
+  --color-data-4: #8a3ffc;
+  --color-data-5: #b42356;
+  --color-data-6: #5b6b00;
+
+  /* ── type: Schibsted Grotesk for titles, the system face for reading ── */
+  --font-display: 'Schibsted Grotesk Variable', 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --text-display: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+  --text-title: 1.625rem;
+  --text-headline: 1.1875rem;
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+  --text-caption: 0.75rem;
+  --leading-display: 1.08;
+  --leading-title: 1.18;
+  --leading-headline: 1.26;
+  --leading-body: 1.55;
+  --leading-small: 1.45;
+  --leading-caption: 1.35;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --tracking-display: -0.025em;
+  --tracking-title: -0.015em;
+  --tracking-headline: -0.005em;
+
+  /* ── shape ──────────────────────────────────────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* ── space ──────────────────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+
+  /* ── layout ─────────────────────────────────────────────────────────── */
+  --content-width: 78rem;
+  --gutter: 1rem;
+  --nav-height: 3.5rem;
+  --tabbar-height: 4rem;
+  --sidebar-width: 15.5rem;
+  --row-pad: 0.625rem;  /* table cell vertical padding; compact density halves it */
+
+  /* ── elevation: a white inner edge and a soft slate shadow ──────────── */
+  --shadow-1: inset 0 0 0 1px rgb(255 255 255 / 0.85), 0 0 0 1px rgb(20 30 45 / 0.06), 0 4px 18px rgb(40 60 90 / 0.06);
+  --shadow-2: inset 0 0 0 1px rgb(255 255 255 / 0.9), 0 0 0 1px rgb(20 30 45 / 0.06), 0 14px 36px rgb(40 60 90 / 0.16);
+  --shadow-float: var(--shadow-2);
+  --shadow-raised: 0 1px 2px rgb(20 30 45 / 0.12), 0 0 0 1px rgb(20 30 45 / 0.04);
+
+  /* ── motion ─────────────────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration: 220ms;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #0d1218;
+  --wash:
+    radial-gradient(90% 55% at 0% 0%, rgb(242 165 22 / 0.1) 0%, rgb(242 165 22 / 0) 62%),
+    radial-gradient(80% 60% at 100% 100%, rgb(48 96 170 / 0.24) 0%, rgb(48 96 170 / 0) 70%),
+    linear-gradient(180deg, #0f151c 0%, #0b1015 100%);
+
+  --color-surface: rgb(255 255 255 / 0.05);
+  --color-surface-solid: #151c24;
+  --color-fill: rgb(255 255 255 / 0.07);
+  --color-fill-hover: rgb(255 255 255 / 0.11);
+  --color-row-hover: rgb(255 255 255 / 0.035);
+  --color-glass: rgb(17 23 31 / 0.8);
+  --color-glass-strong: rgb(21 28 36 / 0.95);
+  --color-scrim: rgb(0 0 0 / 0.6);
+  --color-separator: rgb(255 255 255 / 0.1);
+  --color-border: #7d8794;
+  --color-inverse: #e7ecf2;
+  --color-on-inverse: #0d1218;
+
+  --color-text: #e7ecf2;
+  --color-text-secondary: #a9b3bf;
+  --color-text-tertiary: #8792a0;
+
+  --color-accent: #e7ecf2;
+  --color-accent-hover: #ffffff;
+  --color-accent-active: #d3dae3;
+  --color-on-accent: #0d1218;
+  --color-accent-text: #8cb8ff;
+  --color-accent-soft: rgb(140 184 255 / 0.16);
+  --color-focus: #8cb8ff;
+
+  --color-brand: #f6b73c;
+  --color-brand-ink: #ffd890;
+  --color-brand-soft: rgb(246 183 60 / 0.14);
+
+  --color-success: #5fd38c;
+  --color-warning: #ffbe5c;
+  --color-danger: #ff8f85;
+  --color-danger-fill: #b42318;
+  --color-danger-fill-hover: #c8291d;
+  --color-success-on-inverse: #18723a;
+  --color-danger-on-inverse: #b42318;
+  --color-indigo: #8cb8ff;
+  --color-teal: #5fd0d4;
+
+  --color-data-1: #8cb8ff;
+  --color-data-2: #ffa95c;
+  --color-data-3: #5fd0d4;
+  --color-data-4: #c5a3ff;
+  --color-data-5: #ff8fb5;
+  --color-data-6: #c7d36a;
+
+  --shadow-1: inset 0 0 0 1px rgb(255 255 255 / 0.07), 0 6px 22px rgb(0 0 0 / 0.28);
+  --shadow-2: inset 0 0 0 1px rgb(255 255 255 / 0.1), 0 16px 40px rgb(0 0 0 / 0.5);
+  --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+
+/* Compact tables, chosen in Settings. */
+[data-density='compact'] {
+  --row-pad: 0.3125rem;
+}
+
+/* No backdrop-filter: floating surfaces become nearly solid so text never
+   sits on busy content. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root,
+  [data-theme='light'] { --color-glass: rgb(250 251 252 / 0.97); --color-glass-strong: #ffffff; }
+  [data-theme='dark'] { --color-glass: rgb(17 23 31 / 0.97); --color-glass-strong: #151c24; }
+}
+
+/* People who ask for less transparency get solid surfaces and no blur. */
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme='light'] { --color-surface: #ffffff; --color-glass: #ffffff; --color-glass-strong: #ffffff; --blur-glass: none; }
+  [data-theme='dark'] { --color-surface: #151c24; --color-glass: #151c24; --color-glass-strong: #151c24; --blur-glass: none; }
+}

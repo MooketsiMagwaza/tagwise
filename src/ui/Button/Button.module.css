@@ -1,0 +1,129 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease),
+    transform var(--duration-fast) var(--ease);
+}
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sm {
+  min-height: 2rem;
+  padding: 0 0.875rem;
+  font-size: var(--text-caption);
+}
+.md {
+  min-height: 2.5rem;
+  padding: 0 1.125rem;
+  font-size: var(--text-small);
+}
+.lg {
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  font-size: var(--text-body);
+}
+.full {
+  width: 100%;
+}
+
+/* The one primary action on a screen: ink. */
+.primary {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+.primary:hover:not(:disabled) { background: var(--color-accent-hover); }
+.primary:active:not(:disabled) { background: var(--color-accent-active); }
+
+.secondary {
+  background: var(--color-surface-solid);
+  color: var(--color-text);
+  box-shadow: var(--shadow-raised);
+}
+.secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-surface-solid) 90%, var(--color-text));
+}
+
+.ghost {
+  background: transparent;
+  color: var(--color-text);
+}
+.ghost:hover:not(:disabled) { background: var(--color-fill); }
+
+/* Destructive actions: only ever the confirm step of a confirmation. */
+.danger {
+  background: var(--color-danger-fill);
+  color: #ffffff;
+}
+.danger:hover:not(:disabled) { background: var(--color-danger-fill-hover); }
+
+.link {
+  min-height: 0;
+  padding: var(--space-1);
+  background: none;
+  color: var(--color-accent-text);
+}
+.link:hover:not(:disabled) { text-decoration: underline; }
+
+/* ── icon-only ─────────────────────────────────────────────────────── */
+.icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
+}
+.icon:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.icon-md { width: 2.25rem; height: 2.25rem; }
+.icon-sm { width: 1.75rem; height: 1.75rem; }
+
+.icon-secondary { background: var(--color-fill); color: var(--color-text-secondary); }
+.icon-secondary:hover:not(:disabled) { background: var(--color-fill-hover); color: var(--color-text); }
+
+.icon-plain { background: none; color: var(--color-text-secondary); }
+.icon-plain:hover:not(:disabled) { background: var(--color-fill); color: var(--color-text); }
+
+.icon-overlay {
+  background: var(--color-glass-strong);
+  color: var(--color-text);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+}
+.icon-overlay:hover:not(:disabled) { background: var(--color-surface-solid); }
+.icon-overlay[aria-pressed='true'] {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.count {
+  position: absolute;
+  top: -0.125rem;
+  right: -0.125rem;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-danger-fill);
+  color: #ffffff;
+  font-size: 0.625rem;
+  font-weight: var(--weight-semibold);
+  line-height: 1rem;
+  text-align: center;
+}

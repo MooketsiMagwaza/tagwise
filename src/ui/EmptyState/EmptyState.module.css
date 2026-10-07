@@ -1,0 +1,15 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+}
+.icon {
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-1);
+}
+.empty button {
+  margin-top: var(--space-3);
+}
