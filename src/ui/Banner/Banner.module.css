@@ -1,0 +1,21 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--tone) 11%, var(--color-surface-solid));
+  color: var(--color-text);
+  font-size: var(--text-small);
+  line-height: var(--leading-small);
+}
+.banner svg {
+  flex: 0 0 auto;
+  color: var(--tone);
+}
+.info { --tone: var(--color-accent-text); }
+.warning { --tone: var(--color-warning); }
+.brand {
+  --tone: var(--color-brand-ink);
+  background: var(--color-brand-soft);
+}

@@ -1,0 +1,15 @@
+.lines {
+  display: grid;
+  gap: var(--space-3);
+}
+.line {
+  height: 0.875rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-fill-hover);
+  animation: pulse 1.3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}

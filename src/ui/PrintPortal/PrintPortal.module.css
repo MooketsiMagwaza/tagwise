@@ -1,0 +1,19 @@
+/* Off-screen until printing, then the only thing on the page. */
+.portal {
+  display: none;
+}
+
+@media print {
+  :global(body) > *:not(.portal) {
+    display: none !important;
+  }
+  .portal {
+    display: block;
+    background: #ffffff;
+    color: #000000;
+  }
+  :global(html),
+  :global(body) {
+    background: #ffffff !important;
+  }
+}

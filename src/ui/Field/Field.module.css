@@ -1,0 +1,109 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.label {
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.wrap {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+.narrow {
+  width: 5rem;
+  flex: 0 0 auto;
+}
+
+/* 16px on purpose: anything smaller makes iOS Safari zoom the page on focus. */
+.input {
+  width: 100%;
+  height: 2.5rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-solid);
+  color: var(--color-text);
+  font-size: var(--text-body);
+  transition: border-color var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease);
+}
+.input::placeholder {
+  color: var(--color-text-tertiary);
+  opacity: 1;
+}
+.input:hover {
+  border-color: var(--color-text-secondary);
+}
+.input:focus {
+  outline: 0;
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 26%, transparent);
+}
+.input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+.input[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-danger) 24%, transparent);
+}
+.center {
+  text-align: center;
+  padding: 0 var(--space-2);
+}
+.hasIcon {
+  padding-left: 2.5rem;
+}
+.startIcon {
+  position: absolute;
+  inset: 0 auto 0 var(--space-3);
+  display: grid;
+  place-items: center;
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+.search {
+  width: 100%;
+  max-width: 24rem;
+}
+/* The search type brings its own clear button and decoration in WebKit. */
+.input[type='search']::-webkit-search-decoration,
+.input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+.chevron {
+  position: absolute;
+  inset: 0 var(--space-3) 0 auto;
+  display: grid;
+  place-items: center;
+  color: var(--color-text-secondary);
+  pointer-events: none;
+}
+
+.note {
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  color: var(--color-text-secondary);
+}
+.error {
+  color: var(--color-danger);
+}
+
+.textarea {
+  height: auto;
+  min-height: 6rem;
+  padding: var(--space-3) var(--space-4);
+  line-height: 1.4;
+  resize: vertical;
+}

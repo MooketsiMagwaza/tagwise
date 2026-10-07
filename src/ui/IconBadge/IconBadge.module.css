@@ -1,0 +1,20 @@
+.badge {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--tone) 12%, var(--color-surface-solid));
+  color: var(--tone);
+}
+.lg {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-lg);
+}
+
+.accent { --tone: var(--color-accent-text); }
+.indigo { --tone: var(--color-indigo); }
+.warning { --tone: var(--color-warning); }
+.teal { --tone: var(--color-teal); }

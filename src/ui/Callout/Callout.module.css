@@ -1,0 +1,12 @@
+.callout {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-accent-text) 10%, var(--color-surface-solid));
+  color: var(--color-text);
+  font-size: var(--text-small);
+  text-align: center;
+}
+.callout strong {
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+}

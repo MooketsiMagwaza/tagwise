@@ -1,0 +1,6 @@
+.spark {
+  overflow: visible;
+}
+.accent { color: var(--color-accent); }
+.success { color: var(--color-success); }
+.teal { color: var(--color-teal); }
