@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f3f5f7" />
+    <meta name="description" content="Tagwise is a shared register for an organisation's assets and stock: QR labels, scanning in the browser, stock-takes together, spreadsheet import and sites on a map." />
+    <meta property="og:title" content="Tagwise" />
+    <meta property="og:description" content="A shared register for an organisation's assets and stock." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Tagwise</title>
+    <!-- Apply the stored look before first paint so a dark-theme visitor never
+         sees a light flash. Mirrors src/theme/appearance.ts (applyAppearance). -->
+    <script>
+      (function () {
+        try {
+          var a = JSON.parse(localStorage.getItem('tagwise.appearance') || 'null') || {};
+          var dark = a.theme === 'dark' || (a.theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var r = document.documentElement;
+          r.dataset.theme = dark ? 'dark' : 'light';
+          r.dataset.density = a.density || 'comfortable';
+          r.dataset.motion = a.motion || 'system';
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>Tagwise needs JavaScript: the prototype runs entirely in your browser.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
