@@ -234,7 +234,9 @@ export function Shell({ title, children }: { title: string; children: ReactNode 
             </button>
           </div>
           <div className={styles.topRight}>
-            <PresenceStack peers={peers} people={lookups.people} />
+            <span className={styles.presenceSlot}>
+              <PresenceStack peers={peers} people={lookups.people} />
+            </span>
             <IconButton
               label={dark ? 'Use the light theme' : 'Use the dark theme'}
               variant="plain"
