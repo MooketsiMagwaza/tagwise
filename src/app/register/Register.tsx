@@ -199,16 +199,19 @@ export function Register<T extends { id: string }>({ collection, fields, columns
   const [dialog, setDialog] = useState<'filter' | 'columns' | 'save' | null>(null);
   const [viewName, setViewName] = useState('');
 
-  // Load the view's settings whenever another view is chosen.
+  // Load the view's settings whenever another view is chosen. Arriving with
+  // ?site=<id> (from the map or a site page) adds a site filter on top.
+  const siteParam = params.get('site');
   useEffect(() => {
     if (!view) return;
-    setFilters(view.filters);
+    const siteFilter = siteParam && !view.filters.some((f) => f.field === 'siteId') ? [{ field: 'siteId', op: 'is' as const, value: siteParam }] : [];
+    setFilters([...view.filters, ...siteFilter]);
     setSort(view.sort);
     setVisible(view.columns ?? defaults);
     setSelected(new Set());
     setLimit(PAGE);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view?.id]);
+  }, [view?.id, siteParam]);
 
   const rows = useQuery(() => load({ filters, search, sort }), [JSON.stringify(filters), search, JSON.stringify(sort)]);
   const all = useQuery(() => load({ filters: [], search: '' }), []);

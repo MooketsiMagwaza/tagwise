@@ -83,3 +83,50 @@
     order: -1;
   }
 }
+
+.roomsHead {
+  padding: var(--space-5) var(--space-6) 0;
+}
+.roomsHead > div {
+  margin-bottom: var(--space-2);
+}
+.roomsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.roomsTable th,
+.roomsTable td {
+  padding: var(--space-2) var(--space-6);
+  border-top: 1px solid var(--color-separator);
+  text-align: right;
+}
+.roomsTable th:first-child {
+  text-align: left;
+  font-weight: var(--weight-regular);
+}
+.roomsTable thead th {
+  border-top: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+}
+.plainList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.plainList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-separator);
+}
+.plainList li:last-child {
+  border-bottom: 0;
+}
+.plainList a {
+  flex: 1;
+  min-width: 0;
+}
