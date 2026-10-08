@@ -43,8 +43,15 @@ will be one variable, `VITE_API_BASE_URL`; it is not read by the code yet.)
    - Environment Variables: none
 6. Click **Deploy**. The first build takes one to two minutes.
 7. Open the address Vercel shows (for example `tagwise-<something>.vercel.app`)
-   and check that the page loads, and that reloading on a deeper address
-   (any path) still loads the app rather than a 404.
+   and check:
+   - the landing page loads, with its screenshots, in light and dark;
+   - **Open the demo** opens the home page of the sample workspace;
+   - reloading on `/app/assets/MCT-00040` still shows that asset (the
+     rewrite works) rather than a 404;
+   - on a phone, **Scan** asks for the camera and reads a printed label or a
+     product barcode (this is the first real-device test of the camera; see
+     TW-06 in `docs/WORK_ORDERS.md`);
+   - **Sites** shows the map with six pins.
 
 From then on, every merge to `main` deploys to production and every pull
 request gets its own preview address.
