@@ -43,3 +43,4 @@ reserved, merge commits only, no attribution trailers.
 | TW-14 | Real screenshots in the README | **Done** | `npm run screenshots` captures 14 screens in light and dark (28 images in `public/screens`, about 3 MB) from the running app with the installed Edge. The README shows them with a table of what is real and what is demo. |
 | TW-15 | Connect the web app to the Rust API (replace browser storage) | Not started | Waits for the backend work in WO-008 (portfolio work orders). |
 | TW-16 | Review and make the repository public | Not started | Owner decision. |
+| TW-17 | Add a short CLAUDE.md so future sessions follow the same conventions (owner, 8 Oct 2026, relayed by the coordinator) | **Done** | `CLAUDE.md` at the root, 61 lines: what Tagwise is, the commands, the git rules (no attribution trailers, merge commits), the honesty rule, keeping this register current, private repository, no `.env` files, the name gate. Name gate passes with it. |
