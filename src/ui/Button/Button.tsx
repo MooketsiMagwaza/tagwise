@@ -1,4 +1,5 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
+import { navigate } from '../../lib/router';
 import { cx } from '../cx';
 import styles from './Button.module.css';
 
@@ -45,7 +46,17 @@ export function ButtonLink({
   icon?: ReactNode;
 }) {
   return (
-    <a {...rest} className={cx(styles.button, styles[variant], styles[size])}>
+    <a
+      {...rest}
+      className={cx(styles.button, styles[variant], styles[size])}
+      onClick={(event) => {
+        rest.onClick?.(event);
+        const href = rest.href ?? '';
+        if (event.defaultPrevented || !href.startsWith('/') || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+        event.preventDefault();
+        navigate(href);
+      }}
+    >
       {icon}
       {children}
     </a>
