@@ -25,6 +25,6 @@ use crate::schemas::media::{PresignUploadReq, PresignUploadRes};
         ErrorBody,
         ErrorRes,
     )),
-    tags((name = "media", description = "Presigned uploads for catalogue photos and proof of delivery")),
+    tags((name = "media", description = "Presigned uploads for asset photos and attachments")),
 )]
 pub struct ApiDoc;

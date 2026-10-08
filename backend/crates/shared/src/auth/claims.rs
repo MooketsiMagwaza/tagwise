@@ -2,15 +2,16 @@
 //! service checks against it. Roles are plain strings, not an enum — a
 //! service that doesn't know about a given role just never matches it,
 //! rather than failing to compile against a domain it doesn't own any part
-//! of (see `AGENTS.md`'s account/role model).
+//! of (see ARCHITECTURE.md, accounts and roles).
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-pub const ROLE_WAREHOUSE: &str = "warehouse";
-pub const ROLE_STORE: &str = "store";
-pub const ROLE_CARRIER: &str = "carrier";
+/// Every Tagwise account. What someone may do inside a workspace (owner,
+/// admin, editor, auditor, viewer) is the register service's business.
+pub const ROLE_MEMBER: &str = "member";
+/// Tagwise staff: the admin console.
 pub const ROLE_ADMIN: &str = "admin";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

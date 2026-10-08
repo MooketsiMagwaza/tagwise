@@ -120,7 +120,7 @@ mod tests {
     #[test]
     fn alerts_are_reduced_to_what_the_console_shows() {
         let body = r#"[{"labels":{"alertname":"HighErrorRate","severity":"critical"},
-            "annotations":{"summary":"5xx above 5% on commerce"},
+            "annotations":{"summary":"5xx above 5% on register"},
             "startsAt":"2026-09-20T10:00:00Z","status":{"state":"active"}},
             {"labels":{},"annotations":{},"status":{}}]"#;
         let alerts = parse_alerts(body).unwrap();

@@ -187,7 +187,7 @@ pub struct CreateAccountReq {
     pub channel: String,
     #[validate(length(min = 1, max = 300))]
     pub identifier: String,
-    /// Any of `warehouse`, `store`, `carrier`, `admin`.
+    /// `member` or `admin`.
     #[serde(default)]
     pub roles: Vec<String>,
 }

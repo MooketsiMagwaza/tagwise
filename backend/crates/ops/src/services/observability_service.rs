@@ -12,13 +12,13 @@ use chrono::{DateTime, Utc};
 
 use crate::clients::grafana_client::GrafanaAlert;
 use crate::clients::prometheus_client::Sample;
-use crate::clients::stats_clients::{CommerceStats, IdentityStats};
+use crate::clients::stats_clients::{IdentityStats, RegisterStats};
 use crate::clients::{GrafanaClient, PrometheusClient, StatsClients};
 use crate::repositories::TicketRepository;
 use tagwise_shared::errors::AppResult;
 
 /// The scrape jobs the health view looks for (see docker/observability).
-pub const SERVICES: &[&str] = &["identity", "commerce", "notifications", "media", "ops"];
+pub const SERVICES: &[&str] = &["identity", "register", "notifications", "media", "ops"];
 
 /// Is a source set up, and if so, could we reach it?
 #[derive(Debug, Clone)]
@@ -68,7 +68,7 @@ pub struct TicketCounts {
 
 pub struct Overview {
     pub users: (Status, Option<IdentityStats>),
-    pub commerce: (Status, Option<CommerceStats>),
+    pub register: (Status, Option<RegisterStats>),
     pub traffic: Traffic,
     pub tickets: TicketCounts,
     pub generated_at: DateTime<Utc>,
@@ -152,7 +152,7 @@ impl ObservabilityService {
             Ok(s) => (Status::ok(), Some(s)),
             Err(e) => (Status::unreachable(e), None),
         };
-        let commerce = match self.stats.commerce().await {
+        let register = match self.stats.register().await {
             Ok(s) => (Status::ok(), Some(s)),
             Err(e) => (Status::unreachable(e), None),
         };
@@ -166,7 +166,7 @@ impl ObservabilityService {
         };
         Ok(Overview {
             users,
-            commerce,
+            register,
             traffic: self.traffic().await,
             tickets: TicketCounts {
                 open: n("open"),
@@ -222,7 +222,7 @@ impl ObservabilityService {
             };
         };
         let up = prom
-            .query("up{job=~\"identity|commerce|notifications|media|ops\"}")
+            .query("up{job=~\"identity|register|notifications|media|ops\"}")
             .await;
         let up = match up {
             Ok(u) => u,

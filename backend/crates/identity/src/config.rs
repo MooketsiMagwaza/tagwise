@@ -1,5 +1,5 @@
 //! Identity service configuration — accounts, OTP auth, onboarding
-//! (warehouse/store/carrier), admin console.
+//! sessions, API keys, admin console.
 
 use tagwise_shared::config::{
     enforce_https_from_env, required, trust_proxy_headers_from_env, AfricaTalkingConfig,
@@ -28,7 +28,7 @@ pub struct Config {
     pub trust_proxy_headers: bool,
     /// Shared secret every service presents (`X-Internal-Token`) when
     /// calling another service's `/internal/*` routes — see
-    /// `docs/STATUS.md`'s microservices entry for why a shared secret is
+    /// ARCHITECTURE.md (services and auth) for why a shared secret is
     /// enough here (the gateway never routes `/internal/*` to the public
     /// internet at all; this is defense in depth on top of that, not the
     /// only layer).

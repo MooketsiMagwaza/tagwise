@@ -1,4 +1,4 @@
-//! Data access for uploaded media assets (catalogue photos, proof of delivery).
+//! Data access for uploaded media assets (asset photos and attachments).
 
 use uuid::Uuid;
 

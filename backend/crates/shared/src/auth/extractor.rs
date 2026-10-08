@@ -12,7 +12,7 @@ use axum::http::request::Parts;
 use axum_extra::extract::cookie::CookieJar;
 use uuid::Uuid;
 
-use crate::auth::claims::{TokenClaims, ROLE_ADMIN, ROLE_WAREHOUSE};
+use crate::auth::claims::{TokenClaims, ROLE_ADMIN, ROLE_MEMBER};
 use crate::auth::denylist::AccessTokenDenylist;
 use crate::auth::jwt::JwtKeys;
 use crate::errors::AppError;
@@ -84,14 +84,14 @@ where
     }
 }
 
-/// [`AuthUser`] scoped to accounts holding the warehouse role — the handler
+/// [`AuthUser`] scoped to accounts holding the member role — the handler
 /// signature itself documents who may call it, instead of an `if` at the
 /// top of the body that's easy to forget on a new route.
 #[derive(Debug, Clone)]
-pub struct WarehouseUser(pub AuthUser);
+pub struct MemberUser(pub AuthUser);
 
 #[async_trait]
-impl<S> FromRequestParts<S> for WarehouseUser
+impl<S> FromRequestParts<S> for MemberUser
 where
     S: AuthState + Send + Sync,
 {
@@ -99,10 +99,10 @@ where
 
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         let user = AuthUser::from_request_parts(parts, state).await?;
-        if !user.has_role(ROLE_WAREHOUSE) {
+        if !user.has_role(ROLE_MEMBER) {
             return Err(AppError::Unauthorized);
         }
-        Ok(WarehouseUser(user))
+        Ok(MemberUser(user))
     }
 }
 

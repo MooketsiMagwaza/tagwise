@@ -113,7 +113,7 @@ mod tests {
     fn a_query_response_becomes_samples_and_nan_is_dropped() {
         let body = r#"{"status":"success","data":{"resultType":"vector","result":[
             {"metric":{"job":"identity"},"value":[1700000000.0,"1"]},
-            {"metric":{"job":"commerce"},"value":[1700000000.0,"NaN"]}]}}"#;
+            {"metric":{"job":"register"},"value":[1700000000.0,"NaN"]}]}}"#;
         let samples = parse_query_response(body).unwrap();
         assert_eq!(samples.len(), 1);
         assert_eq!(samples[0].label("job"), Some("identity"));

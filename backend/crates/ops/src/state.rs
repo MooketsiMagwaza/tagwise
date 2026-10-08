@@ -64,7 +64,7 @@ impl AppState {
 
         let stats = StatsClients::new(
             config.identity_service_url.clone(),
-            config.commerce_service_url.clone(),
+            config.register_service_url.clone(),
             config.internal_token.clone(),
         );
         let prometheus = config.prometheus_url.clone().map(PrometheusClient::new);

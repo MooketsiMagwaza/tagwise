@@ -21,7 +21,7 @@ use crate::repositories::api_key_repository::{ApiKeyRepository, ApiKeyRow};
 use crate::repositories::{AdminRepository, AuthRepository};
 use tagwise_shared::errors::{AppError, AppResult};
 
-pub const ROLES: &[&str] = &["warehouse", "store", "carrier", "admin"];
+pub const ROLES: &[&str] = &["member", "admin"];
 const KEY_PREFIX: &str = "slk_";
 /// How much of a key is kept in the clear to identify it in a list.
 const SHOWN_PREFIX_LEN: usize = 12;
@@ -216,10 +216,7 @@ impl AccountAdminService {
         let identifier = validate_contact(channel, identifier)?;
         for role in roles {
             if !ROLES.contains(&role.as_str()) {
-                return Err(invalid(
-                    "roles",
-                    "each role must be `warehouse`, `store`, `carrier` or `admin`",
-                ));
+                return Err(invalid("roles", "each role must be `member` or `admin`"));
             }
         }
         let account = self

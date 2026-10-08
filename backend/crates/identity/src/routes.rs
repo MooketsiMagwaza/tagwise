@@ -6,22 +6,12 @@ use tagwise_shared::middleware as shared_mw;
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
 
-use crate::controllers::{account, admin, auth, health, internal, me};
+use crate::controllers::{admin, auth, health, internal, me};
 use crate::openapi::ApiDoc;
 use crate::state::AppState;
 
 pub fn build_router(state: AppState) -> Router {
     let internal_routes = Router::new()
-        .route("/internal/warehouses/:id", get(internal::get_warehouse))
-        .route(
-            "/internal/warehouses/:id/owned-by",
-            get(internal::assert_owns_warehouse),
-        )
-        .route("/internal/stores/:id", get(internal::get_store))
-        .route(
-            "/internal/stores/:id/owned-by",
-            get(internal::assert_owns_store),
-        )
         .route(
             "/internal/accounts/:id/notification-settings",
             get(internal::notification_settings),
@@ -34,14 +24,6 @@ pub fn build_router(state: AppState) -> Router {
         .route(
             "/internal/accounts/:id/email",
             axum::routing::post(internal::send_email),
-        )
-        .route(
-            "/internal/carriers/resolve-single",
-            get(internal::resolve_single_carrier),
-        )
-        .route(
-            "/internal/stores/resolve-single",
-            get(internal::resolve_single_store),
         )
         .layer(middleware::from_fn_with_state(
             state.clone(),
@@ -59,18 +41,6 @@ pub fn build_router(state: AppState) -> Router {
         .route("/v1/auth/otp/verify", axum::routing::post(auth::verify_otp))
         .route("/v1/auth/refresh", axum::routing::post(auth::refresh))
         .route("/v1/auth/logout", axum::routing::post(auth::logout))
-        .route(
-            "/v1/onboarding/warehouses",
-            axum::routing::post(account::register_warehouse).get(account::list_my_warehouses),
-        )
-        .route(
-            "/v1/onboarding/stores",
-            axum::routing::post(account::register_store).get(account::list_my_stores),
-        )
-        .route(
-            "/v1/onboarding/carriers",
-            axum::routing::post(account::register_carrier).get(account::list_my_carriers),
-        )
         .route(
             "/v1/me",
             get(me::get_me).patch(me::patch_me).delete(me::delete_me),

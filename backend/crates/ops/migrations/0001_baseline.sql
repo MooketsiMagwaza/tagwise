@@ -1,5 +1,5 @@
 -- Ops service baseline schema: support tickets. Accounts are opaque UUIDs
--- (identity owns the `accounts` table in its own database) — see commerce's
+-- (identity owns the `accounts` table in its own database) — see the register service's
 -- migration file for why no foreign key crosses a service boundary.
 
 create extension if not exists pgcrypto;

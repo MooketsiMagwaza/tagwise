@@ -1,8 +1,8 @@
 //! Admin console: audit log and deep-link tiles. Every route here requires
 //! the `admin` role — there's no separate `AdminUser` extractor (unlike
-//! `WarehouseUser`) since this is the only controller that needs it; a
+//! `MemberUser`) since this is the only controller that needs it; a
 //! second admin-scoped controller should factor this check out the same
-//! way `WarehouseUser` did.
+//! way `MemberUser` did.
 
 use axum::extract::{Query, State};
 use axum::http::StatusCode;
@@ -82,7 +82,7 @@ pub struct AccountsQuery {
     tag = "admin",
     params(
         ("status" = Option<String>, Query, description = "`active` or `suspended`"),
-        ("role" = Option<String>, Query, description = "`warehouse`, `store`, `carrier` or `admin`"),
+        ("role" = Option<String>, Query, description = "`member` or `admin`"),
         ("q" = Option<String>, Query, description = "Text in a name or contact"),
         ("limit" = Option<i64>, Query, description = "1 to 200, default 50"),
         ("offset" = Option<i64>, Query, description = "Rows to skip"),

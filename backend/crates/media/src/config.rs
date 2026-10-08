@@ -1,5 +1,5 @@
 //! Media service configuration — presigned uploads for catalogue photos and
-//! proof-of-delivery images.
+//! attachments such as receipts and repair notes.
 
 use tagwise_shared::config::{
     enforce_https_from_env, required, trust_proxy_headers_from_env, ConfigError, CorsConfig,

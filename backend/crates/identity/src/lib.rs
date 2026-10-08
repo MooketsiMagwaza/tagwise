@@ -1,5 +1,5 @@
-//! Tagwise identity service — accounts, email/phone OTP auth, onboarding
-//! (warehouse/store/carrier), and the admin console.
+//! Tagwise identity service: accounts, email/phone OTP sign-in, sessions,
+//! API keys and the staff admin console.
 #![allow(dead_code)]
 
 pub mod admin_links;

@@ -6,10 +6,9 @@
 
 use utoipa::OpenApi;
 
-use crate::controllers::{account, admin, auth, me};
+use crate::controllers::{admin, auth, me};
 use crate::schemas::account::{
-    CarrierRes, LogoutReq, RefreshReq, RegisterCarrierReq, RegisterStoreReq, RegisterWarehouseReq,
-    RequestOtpReq, RequestOtpRes, StoreRes, TokenPairRes, VerifyOtpReq, WarehouseRes,
+    LogoutReq, RefreshReq, RequestOtpReq, RequestOtpRes, TokenPairRes, VerifyOtpReq,
 };
 use crate::schemas::admin::{
     AccountDetailRes, AccountListRes, AccountRes, AdminAuditEntryRes, AdminLinksRes,
@@ -27,12 +26,6 @@ use crate::schemas::me::{ContactRes, MeRes, SessionRes, UpdateMeReq};
         auth::refresh,
         auth::logout,
         auth::api_key_token,
-        account::register_warehouse,
-        account::register_store,
-        account::register_carrier,
-        account::list_my_warehouses,
-        account::list_my_stores,
-        account::list_my_carriers,
         me::get_me,
         me::patch_me,
         me::delete_me,
@@ -60,12 +53,6 @@ use crate::schemas::me::{ContactRes, MeRes, SessionRes, UpdateMeReq};
         RefreshReq,
         LogoutReq,
         TokenPairRes,
-        RegisterWarehouseReq,
-        WarehouseRes,
-        RegisterStoreReq,
-        StoreRes,
-        RegisterCarrierReq,
-        CarrierRes,
         MeRes,
         ContactRes,
         UpdateMeReq,
@@ -91,7 +78,6 @@ use crate::schemas::me::{ContactRes, MeRes, SessionRes, UpdateMeReq};
     )),
     tags(
         (name = "auth", description = "Email/phone OTP sign-in, refresh and logout"),
-        (name = "onboarding", description = "Warehouse, store and carrier registration"),
         (name = "me", description = "The signed-in account: profile, preferences, sessions, deletion"),
         (name = "admin", description = "Admin console: accounts, sessions, API keys, audit log and deep links - staff only"),
     ),

@@ -6,14 +6,12 @@
 
 use utoipa::OpenApi;
 
-use crate::clients::stats_clients::{
-    CommerceStats, CurrencyAmount, IdentityStats, RoleCount, StatusCount,
-};
+use crate::clients::stats_clients::{IdentityStats, RegisterStats, RoleCount, StatusCount};
 use crate::controllers::{admin_tickets, console, support};
 use crate::schemas::common::{DependencyStatus, ErrorBody, ErrorRes, ReadyRes};
 use crate::schemas::console::{
-    AlertRes, AlertsRes, ColumnRes, CommerceSection, ConnectionRes, ContainerMemoryRes,
-    DatabaseRes, DatabasesRes, HealthRes, MemoryRes, OpsAuditEntryRes, OverviewRes, RowsRes,
+    AlertRes, AlertsRes, ColumnRes, ConnectionRes, ContainerMemoryRes, DatabaseRes, DatabasesRes,
+    HealthRes, MemoryRes, OpsAuditEntryRes, OverviewRes, RegisterSection, RowsRes,
     ServiceHealthRes, StatusRes, TableRes, TerminateReq, TicketSection, TrafficSection,
     UsersSection,
 };
@@ -62,7 +60,7 @@ use crate::schemas::tickets::{
         StaffTicketDetailRes,
         StatusRes,
         UsersSection,
-        CommerceSection,
+        RegisterSection,
         TrafficSection,
         TicketSection,
         OverviewRes,
@@ -81,10 +79,9 @@ use crate::schemas::tickets::{
         TerminateReq,
         OpsAuditEntryRes,
         IdentityStats,
-        CommerceStats,
+        RegisterStats,
         RoleCount,
         StatusCount,
-        CurrencyAmount,
         DependencyStatus,
         ReadyRes,
         ErrorBody,

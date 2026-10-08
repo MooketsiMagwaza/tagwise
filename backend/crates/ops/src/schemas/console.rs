@@ -6,7 +6,7 @@ use utoipa::ToSchema;
 use uuid::Uuid;
 use validator::Validate;
 
-use crate::clients::stats_clients::{CommerceStats, IdentityStats};
+use crate::clients::stats_clients::{IdentityStats, RegisterStats};
 use crate::repositories::audit_repository::AuditEntry;
 use crate::services::database_service::{ConnectionRow, DatabaseInfo, RowsPage, TableRow};
 use crate::services::observability_service::{
@@ -40,9 +40,9 @@ pub struct UsersSection {
 }
 
 #[derive(Debug, Serialize, ToSchema)]
-pub struct CommerceSection {
+pub struct RegisterSection {
     pub status: StatusRes,
-    pub data: Option<CommerceStats>,
+    pub data: Option<RegisterStats>,
 }
 
 #[derive(Debug, Serialize, ToSchema)]
@@ -88,7 +88,7 @@ impl From<TicketCounts> for TicketSection {
 #[derive(Debug, Serialize, ToSchema)]
 pub struct OverviewRes {
     pub users: UsersSection,
-    pub commerce: CommerceSection,
+    pub register: RegisterSection,
     pub traffic: TrafficSection,
     pub tickets: TicketSection,
     pub generated_at: DateTime<Utc>,
@@ -101,9 +101,9 @@ impl From<Overview> for OverviewRes {
                 status: o.users.0.into(),
                 data: o.users.1,
             },
-            commerce: CommerceSection {
-                status: o.commerce.0.into(),
-                data: o.commerce.1,
+            register: RegisterSection {
+                status: o.register.0.into(),
+                data: o.register.1,
             },
             traffic: o.traffic.into(),
             tickets: o.tickets.into(),

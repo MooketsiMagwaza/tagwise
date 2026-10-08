@@ -21,8 +21,8 @@ pub struct Config {
     pub internal_token: String,
     /// Identity says who a requester is, and how many accounts there are.
     pub identity_service_url: String,
-    /// Commerce says how many orders there are, and how much demand is pooled.
-    pub commerce_service_url: String,
+    /// The register service says how many assets are out, missing or low.
+    pub register_service_url: String,
     /// Where a ticket update is announced to the person it concerns.
     pub notifications_service_url: String,
     /// Prometheus, for service health, traffic and container memory. Optional:
@@ -71,7 +71,7 @@ impl Config {
             trust_proxy_headers: trust_proxy_headers_from_env()?,
             internal_token: required("INTERNAL_SERVICE_TOKEN")?,
             identity_service_url: required("IDENTITY_SERVICE_URL")?,
-            commerce_service_url: required("COMMERCE_SERVICE_URL")?,
+            register_service_url: required("REGISTER_SERVICE_URL")?,
             notifications_service_url: required("NOTIFICATIONS_SERVICE_URL")?,
             prometheus_url: non_empty_env("PROMETHEUS_URL"),
             grafana_url: non_empty_env("GRAFANA_URL"),
@@ -90,7 +90,7 @@ mod tests {
     #[test]
     fn viewer_databases_are_parsed_and_junk_is_skipped() {
         let parsed = parse_viewer_databases(
-            "identity=postgres://u:p@db:5432/tagwise_identity?sslmode=disable, commerce = postgres://u:p@db/c ,=x,bad name=y,empty=",
+            "identity=postgres://u:p@db:5432/tagwise_identity?sslmode=disable, register = postgres://u:p@db/c ,=x,bad name=y,empty=",
         );
         assert_eq!(parsed.len(), 2);
         assert_eq!(parsed[0].0, "identity");
@@ -98,7 +98,7 @@ mod tests {
             parsed[0].1.ends_with("sslmode=disable"),
             "everything after the first = is the URL"
         );
-        assert_eq!(parsed[1].0, "commerce");
+        assert_eq!(parsed[1].0, "register");
         assert!(parse_viewer_databases("").is_empty());
     }
 }

@@ -1,5 +1,5 @@
-//! Tagwise media service — presigned uploads (catalogue photos, proof of
-//! delivery) to S3-compatible object storage.
+//! Tagwise media service: presigned uploads (asset photos and
+//! attachments) to S3-compatible object storage.
 #![allow(dead_code)]
 
 pub mod config;

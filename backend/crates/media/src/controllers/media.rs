@@ -1,4 +1,4 @@
-//! Presigned media uploads (catalogue photos, proof of delivery).
+//! Presigned media uploads (asset photos and attachments).
 
 use axum::body::Bytes;
 use axum::extract::{Path, State};

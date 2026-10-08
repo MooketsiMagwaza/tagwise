@@ -84,12 +84,12 @@ mod tests {
         let keys = keys();
         let account_id = Uuid::new_v4();
         let token = keys
-            .issue_access(account_id, vec!["warehouse".to_string()])
+            .issue_access(account_id, vec!["member".to_string()])
             .unwrap();
 
         let claims = keys.verify(&token).unwrap();
         assert_eq!(claims.sub, account_id);
-        assert!(claims.has_role("warehouse"));
+        assert!(claims.has_role("member"));
     }
 
     /// Red test: a token signed with a different secret must not verify —

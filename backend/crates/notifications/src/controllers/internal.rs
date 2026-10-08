@@ -1,4 +1,4 @@
-//! Service-to-service endpoint: other services (commerce today) POST here
+//! Service-to-service endpoint: other services (the register service today) POST here
 //! to raise a notification for an account. Never reachable through the
 //! public gateway; guarded by `tagwise_shared::middleware::internal_auth_mw`.
 

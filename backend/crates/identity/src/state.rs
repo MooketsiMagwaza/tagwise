@@ -12,9 +12,8 @@ use crate::email::gateway::{EmailGateway, LoggingEmailGateway};
 use crate::email::resend::ResendEmailGateway;
 use crate::repositories::{
     AccountAdminRepository, AdminRepository, ApiKeyRepository, AuthRepository, MeRepository,
-    OnboardingRepository,
 };
-use crate::services::{AccountAdminService, AdminService, MeService, OnboardingService};
+use crate::services::{AccountAdminService, AdminService, MeService};
 use crate::sms::gateway::{NoopSmsGateway, SmsGateway};
 use crate::sms::AfricaTalkingSmsGateway;
 
@@ -31,7 +30,6 @@ pub struct AppState {
     pub auth_repo: AuthRepository,
     pub email: Arc<dyn EmailGateway>,
     pub me: MeService,
-    pub onboarding: OnboardingService,
     pub admin: AdminService,
     pub accounts_admin: AccountAdminService,
 }
@@ -76,7 +74,6 @@ impl AppState {
         });
 
         let auth_repo = AuthRepository::new(db.clone());
-        let onboarding_repo = OnboardingRepository::new(db.clone());
         let admin_repo = AdminRepository::new(db.clone());
 
         let key_repo = ApiKeyRepository::new(db.clone());
@@ -91,7 +88,6 @@ impl AppState {
             config.otp.dev_echo_enabled,
             config.jwt.refresh_ttl,
         );
-        let onboarding = OnboardingService::new(onboarding_repo, auth_repo.clone());
         let me = MeService::new(MeRepository::new(db.clone()));
         let accounts_admin = AccountAdminService::new(
             AccountAdminRepository::new(db.clone()),
@@ -112,7 +108,6 @@ impl AppState {
             auth_repo,
             email,
             me,
-            onboarding,
             admin,
             accounts_admin,
         }

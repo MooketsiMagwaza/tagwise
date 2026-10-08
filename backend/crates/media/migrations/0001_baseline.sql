@@ -1,5 +1,5 @@
 -- Media service baseline schema. `account_id` is an opaque UUID (identity
--- owns the `accounts` table in its own database) — see commerce's
+-- owns the `accounts` table in its own database) — see the register service's
 -- migration file for the full explanation of this pattern.
 
 create extension if not exists pgcrypto;

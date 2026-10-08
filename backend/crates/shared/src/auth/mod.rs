@@ -10,7 +10,7 @@ pub mod jwt;
 
 pub use claims::TokenClaims;
 pub use denylist::AccessTokenDenylist;
-pub use extractor::{AdminUser, AuthState, AuthUser, WarehouseUser, SESSION_COOKIE};
+pub use extractor::{AdminUser, AuthState, AuthUser, MemberUser, SESSION_COOKIE};
 pub use jwt::JwtKeys;
 
 /// Failures specific to token handling. Map to `AppError::Unauthorized` at the

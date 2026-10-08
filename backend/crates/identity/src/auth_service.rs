@@ -201,9 +201,16 @@ impl AuthService {
         {
             Some(account) => account,
             None => {
-                self.repo
+                let account = self
+                    .repo
                     .create_account_with_contact(channel, identifier, identifier)
-                    .await?
+                    .await?;
+                // Every Tagwise account is a member; workspace roles are the
+                // register service's business.
+                self.repo
+                    .add_role(account.id, tagwise_shared::auth::claims::ROLE_MEMBER)
+                    .await?;
+                account
             }
         };
 
@@ -217,8 +224,8 @@ impl AuthService {
     }
 
     /// Mint a fresh access/refresh pair carrying the account's *current*
-    /// roles. `verify_otp` already calls this internally; onboarding
-    /// (`register_warehouse`/`register_store`/`register_carrier`) also calls
+    /// roles. `verify_otp` already calls this internally; a caller that has
+    /// just been granted a role (an admin promotion) also calls
     /// it directly after granting a new role — the session issued at sign-in
     /// time predates that role, so without this the caller would be stuck
     /// holding a token that can never pass the new role's guard until it
