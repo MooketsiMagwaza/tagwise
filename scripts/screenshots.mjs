@@ -20,6 +20,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /** name, path, viewport, and an optional step to run before the capture. */
 const SHOTS = [
+  { name: 'landing', path: '/', size: 'desktop', settle: 1500 },
+  { name: 'phone-landing', path: '/', size: 'phone', settle: 1500 },
   { name: 'dashboard', path: '/app', size: 'desktop' },
   { name: 'register', path: '/app/assets', size: 'desktop' },
   { name: 'asset', path: '/app/assets/MCT-00040', size: 'desktop' },
@@ -78,7 +80,7 @@ for (const theme of ['light', 'dark']) {
     }, theme);
     const page = await context.newPage();
     await page.goto(BASE + shot.path, { waitUntil: 'networkidle' });
-    await page.waitForSelector('main', { timeout: 20000 });
+    await page.waitForSelector('main, h1', { timeout: 20000 });
     await wait(1200);
     if (shot.before) await shot.before(page);
     if (shot.settle) await wait(shot.settle);
