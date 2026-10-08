@@ -17,6 +17,7 @@ backend, desktop app, documentation site, marketing site or docs.
 | `src/theme/appearance.ts`, `src/theme/base.css`, `src/theme/index.ts` | `theme/appearance.ts`, `theme/base.css`, `theme/index.ts` | Accent choices replaced by table density; storage key renamed; the canvas wash added to `base.css`. |
 | `src/lib/router.tsx` | `lib/router.ts` | Event renamed, support-page tracking removed, `Link` and `isActive` added. |
 | `src/lib/toast.tsx` | `lib/toast.tsx` | Unchanged apart from imports. |
+| `src/app/scan/Scanner.tsx` | `ui/Scanner/Scanner.tsx` | Kept: camera start-up, BarcodeDetector use, manual entry. Replaced the jsQR fallback with ZXing (so 1D barcodes work without BarcodeDetector), and added continuous scanning with a repeat guard, a torch toggle, a secure-context check and a note saying which decoder is in use. |
 | `eslint.config.js`, `tsconfig.json`, `vite.config.ts`, `index.html` | `web/` root files of the same names | Rewritten for Tagwise; the shape (strict TypeScript, "no inline styles in screens" lint rule, pre-paint theme script) is kept. |
 
 Later pull requests that copy more StockLink code add a row here in the same

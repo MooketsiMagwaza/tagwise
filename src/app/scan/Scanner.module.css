@@ -1,0 +1,68 @@
+.scanner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.opt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.viewport {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: #0b0f14;
+}
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* The aiming window: a soft dark surround and tag-amber corners. */
+.frame {
+  position: absolute;
+  inset: 20% 16%;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.38);
+  background:
+    linear-gradient(#f2a516, #f2a516) top left / 28px 3px no-repeat,
+    linear-gradient(#f2a516, #f2a516) top left / 3px 28px no-repeat,
+    linear-gradient(#f2a516, #f2a516) top right / 28px 3px no-repeat,
+    linear-gradient(#f2a516, #f2a516) top right / 3px 28px no-repeat,
+    linear-gradient(#f2a516, #f2a516) bottom left / 28px 3px no-repeat,
+    linear-gradient(#f2a516, #f2a516) bottom left / 3px 28px no-repeat,
+    linear-gradient(#f2a516, #f2a516) bottom right / 28px 3px no-repeat,
+    linear-gradient(#f2a516, #f2a516) bottom right / 3px 28px no-repeat;
+  pointer-events: none;
+  transition: box-shadow var(--duration-fast) var(--ease);
+}
+.flash .frame {
+  box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.38), inset 0 0 0 3px #f2a516;
+}
+.overlay {
+  position: absolute;
+  inset: auto var(--space-4) var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: rgb(11 15 20 / 0.82);
+  color: #f3f5f7;
+  text-align: center;
+}
+.torch {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+}
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+.engine {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-caption);
+}
