@@ -1,0 +1,67 @@
+.line,
+.compact {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-separator);
+}
+.line:last-child,
+.compact:last-child {
+  border-bottom: 0;
+}
+.compact {
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.what {
+  overflow-wrap: anywhere;
+}
+.what strong {
+  font-weight: var(--weight-semibold);
+}
+.what a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: var(--color-separator);
+  text-underline-offset: 3px;
+}
+.what a:hover {
+  color: var(--color-accent-text);
+  text-decoration-color: currentColor;
+}
+.detail {
+  color: var(--color-text-secondary);
+}
+.quote {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-fill);
+  color: var(--color-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.changes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--color-text-secondary);
+}
+.from {
+  text-decoration: line-through;
+  text-decoration-color: var(--color-text-tertiary);
+}
+.to {
+  color: var(--color-text);
+}
+.time {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-caption);
+}
