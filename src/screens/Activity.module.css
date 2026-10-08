@@ -1,0 +1,30 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 52rem;
+}
+.filters {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.filters > div:first-child {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.person {
+  min-width: 13rem;
+}
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
