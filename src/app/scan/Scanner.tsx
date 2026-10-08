@@ -188,7 +188,7 @@ export function Scanner({ onScan, hint, paused = false }: { onScan: (value: stri
         onChange={setMode}
         options={[
           { value: 'camera', label: <span className={styles.opt}><Video size={14} /> Camera</span> },
-          { value: 'manual', label: <span className={styles.opt}><Keyboard size={14} /> Type or handheld scanner</span> },
+          { value: 'manual', label: <span className={styles.opt}><Keyboard size={14} /> Type the code</span> },
         ]}
       />
 

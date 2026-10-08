@@ -11,9 +11,13 @@
   height: 16rem;
   min-height: 16rem;
 }
-.map {
+/* MapLibre's own stylesheet makes its container position: relative, so the
+   size is set explicitly (an absolute inset alone collapses to zero height). */
+.wrap .map {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
 }
 .note {
   position: absolute;
