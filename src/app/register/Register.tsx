@@ -8,6 +8,7 @@ import { ArrowDown, ArrowUp, Columns3, Download, ListFilter, Plus, Save, X } fro
 import { Button, EmptyState, Form, Input, Modal, Row, TextField } from '../../ui';
 import { navigate, useLocation } from '../../lib/router';
 import { downloadCsv } from '../../lib/csv';
+import { downloadXlsx } from '../../lib/sheet';
 import { useToast } from '../../lib/toast';
 import { describeFilter, type FieldDef, type FieldType, type Lookups } from '../../data/fields';
 import { repo, useLookups, useMe, useQuery } from '../../data/hooks';
@@ -240,14 +241,22 @@ export function Register<T extends { id: string }>({ collection, fields, columns
     toast.push(`Updated "${view.name}"`);
   }
 
-  function exportCsv(items: T[]) {
+  function exportRows(items: T[]): unknown[][] {
     const header = columns.map((c) => c.label);
-    const body = items.map((row) => columns.map((c) => {
-      const f = fields.find((x) => x.key === (c.sortKey ?? c.key));
-      return f ? (f.display ? f.display(row, l) : f.get(row, l) ?? '') : '';
-    }));
-    downloadCsv([header, ...body], exportFile);
-    toast.push(`Exported ${items.length} ${items.length === 1 ? noun[0] : noun[1]} to ${exportFile}`);
+    const body = items.map((row) =>
+      columns.map((c) => {
+        const f = fields.find((x) => x.key === (c.sortKey ?? c.key));
+        return f ? (f.display ? f.display(row, l) : f.get(row, l) ?? '') : '';
+      }),
+    );
+    return [header, ...body];
+  }
+
+  async function exportFileAs(items: T[], kind: 'csv' | 'xlsx') {
+    const name = kind === 'csv' ? exportFile : exportFile.replace(/\.csv$/, '.xlsx');
+    if (kind === 'csv') downloadCsv(exportRows(items), name);
+    else await downloadXlsx(exportRows(items), name, noun[1]);
+    toast.push(`Exported ${items.length} ${items.length === 1 ? noun[0] : noun[1]} to ${name}`);
   }
 
   const allSelected = shown.length > 0 && shown.every((r) => selected.has(r.id));
@@ -275,9 +284,14 @@ export function Register<T extends { id: string }>({ collection, fields, columns
             Columns
           </Button>
           {can('export') && (
-            <Button variant="secondary" size="sm" icon={<Download size={15} />} onClick={() => exportCsv(list)}>
-              Export CSV
-            </Button>
+            <>
+              <Button variant="secondary" size="sm" icon={<Download size={15} />} onClick={() => exportFileAs(list, 'xlsx')}>
+                Excel
+              </Button>
+              <Button variant="secondary" size="sm" icon={<Download size={15} />} onClick={() => exportFileAs(list, 'csv')}>
+                CSV
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -417,7 +431,7 @@ export function Register<T extends { id: string }>({ collection, fields, columns
           </span>
           {bulkActions?.(selectedRows, () => setSelected(new Set()))}
           {can('export') && (
-            <Button variant="ghost" size="sm" onClick={() => exportCsv(selectedRows)}>
+            <Button variant="ghost" size="sm" onClick={() => exportFileAs(selectedRows, 'xlsx')}>
               Export selected
             </Button>
           )}
