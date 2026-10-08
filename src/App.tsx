@@ -12,10 +12,20 @@ const screen = (load: () => Promise<{ default: ComponentType<ScreenProps> }>): S
 const Landing = lazy(() => import('./screens/Landing'));
 const Dashboard = screen(() => import('./screens/Dashboard'));
 const Soon = screen(() => import('./screens/Soon'));
+const Assets = screen(() => import('./screens/Assets'));
+const AssetNew = screen(() => import('./screens/AssetNew'));
+const AssetDetail = screen(() => import('./screens/AssetDetail'));
+const Stock = screen(() => import('./screens/Stock'));
+const StockDetail = screen(() => import('./screens/StockDetail'));
 
 /** App routes, most specific first. `title` names the browser tab. */
 const ROUTES: { pattern: string; title: string; component: Screen }[] = [
   { pattern: '/app', title: 'Home', component: Dashboard },
+  { pattern: '/app/assets', title: 'Assets', component: Assets },
+  { pattern: '/app/assets/new', title: 'Add an asset', component: AssetNew },
+  { pattern: '/app/assets/:id', title: 'Asset', component: AssetDetail },
+  { pattern: '/app/stock', title: 'Stock', component: Stock },
+  { pattern: '/app/stock/:id', title: 'Stock line', component: StockDetail },
   { pattern: '/app/*', title: 'Not built yet', component: Soon },
 ];
 

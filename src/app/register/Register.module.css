@@ -1,0 +1,276 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── saved views ────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 3px;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--color-separator);
+}
+.tab {
+  position: relative;
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 0;
+  background: none;
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+}
+.tab:hover {
+  color: var(--color-text);
+}
+.tab[aria-selected='true'] {
+  color: var(--color-text);
+}
+.tab[aria-selected='true']::after {
+  content: "";
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: -3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-brand);
+}
+
+/* ── toolbar ────────────────────────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.searchBox {
+  flex: 1 1 16rem;
+  max-width: 26rem;
+}
+.tools {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.chips {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.25rem 0.25rem 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+}
+.chip button {
+  display: grid;
+  place-items: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text-secondary);
+}
+.chip button:hover {
+  background: var(--color-fill-hover);
+  color: var(--color-text);
+}
+.saveRow {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+.count {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+}
+
+/* ── table ──────────────────────────────────────────────────────────── */
+.panel {
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-1);
+}
+.tableWrap {
+  overflow: auto;
+  max-height: calc(100dvh - 16rem);
+}
+.table {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 0 var(--space-3);
+  height: 2.5rem;
+  background: var(--color-glass-strong);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+  border-bottom: 1px solid var(--color-separator);
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  text-align: left;
+  white-space: nowrap;
+}
+.table th:first-child {
+  border-top-left-radius: var(--radius-lg);
+}
+.table th:last-child {
+  border-top-right-radius: var(--radius-lg);
+}
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+.sortButton:hover {
+  color: var(--color-text);
+}
+.table td {
+  padding: var(--row-pad) var(--space-3);
+  border-bottom: 1px solid var(--color-separator);
+  white-space: nowrap;
+  max-width: 22rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.table tbody tr {
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease);
+}
+.table tbody tr:hover {
+  background: var(--color-row-hover);
+}
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.table tbody tr.selected {
+  background: var(--color-accent-soft);
+}
+.right {
+  text-align: right;
+}
+th.right .sortButton {
+  justify-content: flex-end;
+}
+.checkCell {
+  width: 2.75rem;
+  padding-right: 0;
+}
+.checkCell input,
+.check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-accent-text);
+}
+
+/* ── phone cards ────────────────────────────────────────────────────── */
+.cards {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.card {
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-1);
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 719px) {
+  .tableWrap {
+    display: none;
+  }
+  .cards {
+    display: flex;
+  }
+  .searchBox {
+    max-width: none;
+  }
+}
+
+/* ── bulk actions ───────────────────────────────────────────────────── */
+.bulk {
+  position: sticky;
+  bottom: var(--space-4);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-self: center;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--color-glass-strong);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+  box-shadow: var(--shadow-2);
+}
+@media (max-width: 719px) {
+  .bulk {
+    bottom: calc(var(--tabbar-height) + var(--space-6));
+  }
+}
+
+/* ── dialogs ────────────────────────────────────────────────────────── */
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-weight: var(--weight-medium);
+}
+.select {
+  height: 2.5rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-solid);
+  color: var(--color-text);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+}
+.columnList {
+  display: grid;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.check:hover {
+  background: var(--color-fill);
+}
