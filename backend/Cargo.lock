@@ -3062,6 +3062,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "tagwise-register"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "axum",
+ "base64 0.22.1",
+ "chrono",
+ "deadpool-redis",
+ "dotenvy",
+ "hmac",
+ "rand 0.8.8",
+ "redis",
+ "reqwest",
+ "rust_decimal",
+ "rust_decimal_macros",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "sqlx",
+ "tagwise-shared",
+ "thiserror 1.0.69",
+ "tokio",
+ "tower 0.4.13",
+ "tower-http 0.5.2",
+ "tracing",
+ "tracing-subscriber",
+ "utoipa",
+ "utoipa-swagger-ui",
+ "uuid",
+ "validator",
+]
+
+[[package]]
 name = "tagwise-shared"
 version = "0.1.0"
 dependencies = [

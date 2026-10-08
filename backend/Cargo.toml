@@ -6,6 +6,7 @@ members = [
     "crates/notifications",
     "crates/media",
     "crates/ops",
+    "crates/register",
 ]
 
 # Every service and the shared crate pin the same dependency versions here so
@@ -88,3 +89,12 @@ lto = "thin"
 codegen-units = 1
 strip = "symbols"
 panic = "abort"
+
+# Development and test builds carry no debug info: it is most of the size of
+# target/ (gigabytes with sqlx and axum) and CI never reads it. Turn it back
+# on locally with CARGO_PROFILE_DEV_DEBUG=true when stepping through code.
+[profile.dev]
+debug = false
+
+[profile.dev.package."*"]
+debug = false

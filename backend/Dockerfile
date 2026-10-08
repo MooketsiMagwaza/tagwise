@@ -1,5 +1,5 @@
 # One Dockerfile builds any of the five services — pass `--build-arg
-# SERVICE=identity|commerce|notifications|media|ops`. Building from the
+# SERVICE=identity|register|notifications|media|ops`. Building from the
 # workspace root (context = backend/) so the shared crate and every
 # service's Cargo.lock entry are visible to the build.
 #
