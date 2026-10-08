@@ -1,0 +1,580 @@
+# Tagwise development stack: five services (identity, register,
+# notifications, media, ops) behind one nginx gateway, each with its own
+# database on one PostgreSQL instance (see init-databases.sql) and one
+# shared Redis (JWTs are checked locally with a shared secret; the
+# access-token denylist and the rate limiter live in Redis so a logout or a
+# throttle is seen by every service at once). See ARCHITECTURE.md.
+#
+# Start:    docker compose -f docker/compose.dev.yml up -d --build
+# Stop:     docker compose -f docker/compose.dev.yml down
+# Reset:    docker compose -f docker/compose.dev.yml down -v   # DESTROYS dev data
+#
+# Gateway (the one address for this environment), default port 5290:
+#   /                    -> web (the Vite app)
+#   /api/v1/auth/*       -> identity
+#   /api/v1/me           -> identity
+#   /api/v1/admin/*      -> identity
+#   /api/v1/workspaces*  -> register
+#   /api/v1/notifications*, /api/v1/devices -> notifications
+#   /api/v1/support/*, /api/v1/admin/tickets* -> ops
+#   /api/v1/media/*      -> media
+#   /docs                -> docs site
+#
+# /internal/* is never routed by the gateway: it is reachable only between
+# services on the app network, and guarded again by the shared
+# X-Internal-Token (tagwise_shared::middleware). Ports differ from the
+# owner's other stacks so both can run at once.
+name: tagwise-dev
+
+x-common-labels: &common-labels
+  app.kubernetes.io/instance: tagwise-dev
+  app.kubernetes.io/part-of: tagwise
+  app.kubernetes.io/version: ${TW_REVISION:-dev}
+  app.kubernetes.io/managed-by: docker-compose
+  io.tagwise.environment: dev
+  io.tagwise.owner: ${TW_OWNER:-platform-engineering}
+  org.opencontainers.image.revision: ${TW_REVISION:-unknown}
+
+# Every service verifies JWTs with this same secret and checks the same
+# Redis-backed denylist/rate limiter — see the file header comment.
+x-shared-env: &shared-env
+  TAGWISE_ENV: development
+  REDIS_URL: redis://redis:6379
+  JWT_ACCESS_SECRET: dev-only-change-me-before-sharing-32-bytes
+  INTERNAL_SERVICE_TOKEN: dev-only-internal-token-change-me
+  SERVER_HOST: 0.0.0.0
+  ENFORCE_HTTPS: "false"
+  RATE_LIMIT_ENABLED: "true"
+  CORS_ALLOWED_ORIGINS: ${TW_DEV_CORS_ORIGINS:-http://localhost:5290}
+  LOG_JSON: "false"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: tagwise-dev-db
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-db
+      app.kubernetes.io/component: database
+      io.tagwise.service: db
+      io.tagwise.data-classification: confidential
+    environment:
+      POSTGRES_USER: tagwise
+      POSTGRES_PASSWORD: tagwise
+      POSTGRES_DB: tagwise
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Only runs against a brand-new data directory (postgres' own
+      # docker-entrypoint-initdb.d behaviour) — creates the four per-service
+      # databases once.
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init-databases.sql:ro
+    networks:
+      - data
+    ports:
+      - "${TW_DEV_POSTGRES_PORT:-5453}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tagwise"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: tagwise-dev-redis
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-redis
+      app.kubernetes.io/component: cache
+      io.tagwise.service: redis
+      io.tagwise.data-classification: confidential
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+    networks:
+      - data
+    ports:
+      - "${TW_DEV_REDIS_PORT:-6391}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── identity ────────────────────────────────────────────────────────────
+  identity-migrate:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: identity
+    image: tagwise/identity:dev
+    container_name: tagwise-dev-identity-migrate
+    command: ["migrate"]
+    restart: "no"
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-identity-migrate
+      io.tagwise.service: identity-migrate
+      app.kubernetes.io/component: identity-migrate
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_identity
+      # `migrate` only touches config.database, but Config::from_env() loads
+      # everything up front (see main.rs) — these still have to be present
+      # and valid even though migration never uses them.
+      OTP_DEV_ECHO_ENABLED: "true"
+      RESEND_API_KEY: dev-placeholder-not-a-real-key
+      EMAIL_FROM_ADDRESS: otp@tagwise.example
+    networks:
+      - data
+
+  identity:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: identity
+    image: tagwise/identity:dev
+    # No container_name: this service is designed to be scaled during a
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-identity
+      app.kubernetes.io/component: identity
+      io.tagwise.service: identity
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      identity-migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_identity
+      SERVER_PORT: "8080"
+      OTP_DEV_ECHO_ENABLED: "true"
+      RESEND_API_KEY: dev-placeholder-not-a-real-key
+      EMAIL_FROM_ADDRESS: otp@tagwise.example
+      RUST_LOG: tagwise_identity=debug,tower_http=info,info
+    networks:
+      - app
+      - data
+    # No fixed host `ports:` — a service designed to be scaled during a
+    # rolling update (docker/scripts/rolling-update.mjs) can't publish a static
+    # host port (two replicas would both try to bind it). Reach it through
+    # the gateway, or `docker compose -f docker/compose.dev.yml port identity 8080`
+    # for a one-off direct connection.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # ── register ────────────────────────────────────────────────────────────
+  register-migrate:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: register
+    image: tagwise/register:dev
+    container_name: tagwise-dev-register-migrate
+    command: ["migrate"]
+    restart: "no"
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-register-migrate
+      io.tagwise.service: register-migrate
+      app.kubernetes.io/component: register-migrate
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_register
+      # `migrate` only touches config.database — see identity-migrate's
+      # comment above for why these still have to be present.
+      IDENTITY_SERVICE_URL: http://identity:8080
+      NOTIFICATIONS_SERVICE_URL: http://notifications:8080
+    networks:
+      - data
+
+  register:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: register
+    image: tagwise/register:dev
+    # No container_name: this service is designed to be scaled during a
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-register
+      app.kubernetes.io/component: register
+      io.tagwise.service: register
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      register-migrate:
+        condition: service_completed_successfully
+      identity:
+        condition: service_healthy
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_register
+      SERVER_PORT: "8080"
+      IDENTITY_SERVICE_URL: http://identity:8080
+      NOTIFICATIONS_SERVICE_URL: http://notifications:8080
+      RUST_LOG: tagwise_register=debug,tower_http=info,info
+    networks:
+      - app
+      - data
+    # No fixed host `ports:` — see the identity service's comment above.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # ── notifications ───────────────────────────────────────────────────────
+  notifications-migrate:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: notifications
+    image: tagwise/notifications:dev
+    container_name: tagwise-dev-notifications-migrate
+    command: ["migrate"]
+    restart: "no"
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-notifications-migrate
+      io.tagwise.service: notifications-migrate
+      app.kubernetes.io/component: notifications-migrate
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_notifications
+      IDENTITY_SERVICE_URL: http://identity:8080
+    networks:
+      - data
+
+  notifications:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: notifications
+    image: tagwise/notifications:dev
+    # No container_name: this service is designed to be scaled during a
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-notifications
+      app.kubernetes.io/component: notifications
+      io.tagwise.service: notifications
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      notifications-migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_notifications
+      SERVER_PORT: "8080"
+      IDENTITY_SERVICE_URL: http://identity:8080
+      RUST_LOG: tagwise_notifications=debug,tower_http=info,info
+    networks:
+      - app
+      - data
+    # No fixed host `ports:` — see the identity service's comment above.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # ── ops ─────────────────────────────────────────────────────────────────
+  ops-migrate:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: ops
+    image: tagwise/ops:dev
+    container_name: tagwise-dev-ops-migrate
+    command: ["migrate"]
+    restart: "no"
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-ops-migrate
+      io.tagwise.service: ops-migrate
+      app.kubernetes.io/component: ops-migrate
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_ops
+      IDENTITY_SERVICE_URL: http://identity:8080
+      REGISTER_SERVICE_URL: http://register:8080
+      NOTIFICATIONS_SERVICE_URL: http://notifications:8080
+    networks:
+      - data
+
+  ops:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: ops
+    image: tagwise/ops:dev
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-ops
+      app.kubernetes.io/component: ops
+      io.tagwise.service: ops
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ops-migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_ops
+      SERVER_PORT: "8080"
+      IDENTITY_SERVICE_URL: http://identity:8080
+      REGISTER_SERVICE_URL: http://register:8080
+      NOTIFICATIONS_SERVICE_URL: http://notifications:8080
+      # The admin console reads service health and container memory from
+      # Prometheus and firing alerts from Grafana. Both live in the separate
+      # observability stack (docker/observability); until it is running the
+      # console says it cannot reach them. GRAFANA_TOKEN is a Grafana
+      # service-account token (Viewer role) - leave empty to show alerts as
+      # "not set up".
+      PROMETHEUS_URL: ${TW_DEV_PROMETHEUS_URL:-http://tagwise-prometheus:9090}
+      GRAFANA_URL: ${TW_DEV_GRAFANA_URL:-http://tagwise-grafana:3000}
+      GRAFANA_TOKEN: ${TW_DEV_GRAFANA_TOKEN:-}
+      # The database viewer. Development uses the one dev login; every
+      # connection the viewer opens is set read-only by the service itself.
+      # A real deployment gives it a read-only role instead.
+      VIEWER_DATABASES: "identity=postgres://tagwise:tagwise@db:5432/tagwise_identity,register=postgres://tagwise:tagwise@db:5432/tagwise_register,notifications=postgres://tagwise:tagwise@db:5432/tagwise_notifications,media=postgres://tagwise:tagwise@db:5432/tagwise_media,ops=postgres://tagwise:tagwise@db:5432/tagwise_ops"
+      RUST_LOG: tagwise_ops=debug,tower_http=info,info
+    networks:
+      - app
+      - data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # ── media ───────────────────────────────────────────────────────────────
+  media-migrate:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: media
+    image: tagwise/media:dev
+    container_name: tagwise-dev-media-migrate
+    command: ["migrate"]
+    restart: "no"
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-media-migrate
+      io.tagwise.service: media-migrate
+      app.kubernetes.io/component: media-migrate
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_media
+    networks:
+      - data
+
+  media:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: media
+    image: tagwise/media:dev
+    # No container_name: this service is designed to be scaled during a
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-media
+      app.kubernetes.io/component: media
+      io.tagwise.service: media
+      io.tagwise.data-classification: internal
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      media-migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *shared-env
+      DATABASE_URL: postgres://tagwise:tagwise@db:5432/tagwise_media
+      SERVER_PORT: "8080"
+      PUBLIC_MEDIA_BACKEND: local
+      PUBLIC_MEDIA_LOCAL_DIR: /var/lib/tagwise/media
+      PUBLIC_MEDIA_BASE_URL: http://localhost:${TW_DEV_GATEWAY_PORT:-5290}/api/v1/media/local
+      RUST_LOG: tagwise_media=debug,tower_http=info,info
+    volumes:
+      - media-data:/var/lib/tagwise/media
+    networks:
+      - app
+      - data
+    # No fixed host `ports:` — see the identity service's comment above.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1:8080/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  docs:
+    build:
+      context: ..
+      dockerfile: docs-site/Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${TW_DEV_APP_URL:-http://localhost:5290}
+        NEXT_PUBLIC_GRAFANA_URL: ${TW_DEV_GRAFANA_PUBLIC_URL:-http://localhost:3019}
+    image: tagwise/docs:dev
+    container_name: tagwise-dev-docs
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-docs
+      app.kubernetes.io/component: documentation
+      io.tagwise.service: docs
+      io.tagwise.data-classification: public
+    networks:
+      - app
+    ports:
+      - "${TW_DEV_DOCS_PORT:-3021}:3010"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3010/docs >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/web/Dockerfile
+      args:
+        VITE_API_URL: ${TW_DEV_PUBLIC_API_URL:-}
+    image: tagwise/web:dev
+    container_name: tagwise-dev-web
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-web
+      app.kubernetes.io/component: web
+      io.tagwise.service: web
+      io.tagwise.data-classification: public
+    depends_on:
+      identity:
+        condition: service_healthy
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  gateway:
+    build:
+      context: ..
+      dockerfile: docker/nginx/Dockerfile
+      args:
+        GATEWAY_CONF: docker/nginx/gateway.dev.conf
+    image: tagwise/gateway:dev
+    container_name: tagwise-dev-gateway
+    restart: unless-stopped
+    labels:
+      <<: *common-labels
+      app.kubernetes.io/name: tagwise-gateway
+      app.kubernetes.io/component: gateway
+      io.tagwise.service: gateway
+      io.tagwise.data-classification: public
+    depends_on:
+      web:
+        condition: service_healthy
+      identity:
+        condition: service_healthy
+      register:
+        condition: service_healthy
+      notifications:
+        condition: service_healthy
+      media:
+        condition: service_healthy
+      ops:
+        condition: service_healthy
+      docs:
+        condition: service_healthy
+    networks:
+      - edge
+      - app
+    ports:
+      - "${TW_DEV_GATEWAY_PORT:-5290}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/gw-health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+networks:
+  edge:
+    name: tagwise-dev-edge
+  app:
+    name: tagwise-dev-app
+  data:
+    name: tagwise-dev-data
+
+volumes:
+  postgres-data:
+    name: tagwise-dev-postgres-data
+  redis-data:
+    name: tagwise-dev-redis-data
+  media-data:
+    name: tagwise-dev-media-data
