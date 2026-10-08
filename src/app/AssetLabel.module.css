@@ -1,0 +1,56 @@
+/* Labels are print objects: fixed black on white in every theme. */
+.label,
+.print {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 21rem;
+  padding: 10px 12px 10px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #000000;
+  box-shadow: inset 6px 0 0 #f2a516, 0 0 0 1px rgb(0 0 0 / 0.08);
+  font-family: var(--font-sans);
+}
+.print {
+  width: 62mm;
+  height: 40mm;
+  max-width: none;
+  border-radius: 2mm;
+  box-shadow: inset 2mm 0 0 #f2a516, 0 0 0 0.2mm #000000;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.org {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #333333;
+}
+.tag {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.name {
+  font-size: 11px;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.foot {
+  margin-top: 2px;
+  font-size: 8px;
+  color: #444444;
+}
