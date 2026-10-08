@@ -2,12 +2,13 @@ import { useEffect, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './PrintPortal.module.css';
 
-export type Paper = 'a4' | 'label' | 'receipt';
+export type Paper = 'a4' | 'label' | 'receipt' | 'sheet';
 
 const PAGE: Record<Paper, string> = {
   a4: '@page { size: A4; margin: 14mm; }',
-  label: '@page { size: 62mm 40mm; margin: 2mm; }',
+  label: '@page { size: 62mm 40mm; margin: 0; }',
   receipt: '@page { size: 80mm auto; margin: 3mm; }',
+  sheet: '@page { size: A4; margin: 8mm; }',
 };
 
 /** Content that exists only on paper. It renders off-screen; when the user

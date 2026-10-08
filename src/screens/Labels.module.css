@@ -1,0 +1,128 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+.searchLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-weight: var(--weight-medium);
+}
+.listHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 var(--space-1);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-separator);
+}
+.list {
+  max-height: 32rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.check:hover {
+  background: var(--color-row-hover);
+}
+.check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-accent-text);
+}
+.tag {
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+}
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.site {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-caption);
+  white-space: nowrap;
+}
+
+.previewCol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-4));
+}
+/* An A4 page at a fraction of its size: the labels are drawn at print size
+   and the sheet scales them down. */
+.sheet {
+  display: grid;
+  grid-template-columns: repeat(3, 62mm);
+  grid-auto-rows: 40mm;
+  gap: 4mm;
+  justify-content: center;
+  width: 210mm;
+  padding: 8mm;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: var(--shadow-2);
+  transform: scale(0.52);
+  transform-origin: top left;
+  margin-bottom: calc(-297mm * 0.48);
+  margin-right: calc(-210mm * 0.48);
+  aspect-ratio: 210 / 297;
+}
+.slot {
+  border-radius: 2mm;
+  outline: 0.2mm dashed #c9ced6;
+}
+.printSheet {
+  display: grid;
+  grid-template-columns: repeat(3, 62mm);
+  grid-auto-rows: 40mm;
+  gap: 4mm;
+}
+
+@media (max-width: 1100px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .previewCol {
+    position: static;
+    overflow: hidden;
+  }
+}
+@media (max-width: 560px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
+  .sheet {
+    transform: scale(0.4);
+    margin-bottom: calc(-297mm * 0.6);
+    margin-right: calc(-210mm * 0.6);
+  }
+}
