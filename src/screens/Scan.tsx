@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ArrowLeftRight, ClipboardCheck, ExternalLink, PackageSearch, ScanLine, Undo2 } from 'lucide-react';
 import { Button, ButtonLink, Card, CardHeader, EmptyState, Row, SelectField, Text } from '../ui';
 import { useToast } from '../lib/toast';
@@ -131,10 +131,13 @@ export default function Scan() {
   const stock = useQuery((r) => r.stock(), []);
   const [reads, setReads] = useState<Read[]>([]);
   const current = reads[0];
+  const resultRef = useRef<HTMLDivElement>(null);
 
   async function handle(raw: string) {
     const result = await repo().lookup(raw);
     setReads((list) => [{ at: new Date().toISOString(), raw, result }, ...list].slice(0, 12));
+    // On a phone the result sits under the camera: bring it into view.
+    window.requestAnimationFrame(() => resultRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
   }
 
   const samples = [
@@ -163,7 +166,7 @@ export default function Scan() {
           </div>
         </Card>
 
-        <div className={styles.side}>
+        <div className={styles.side} ref={resultRef}>
           <Card>
             {!current ? (
               <EmptyState icon={<ScanLine size={28} />} title="Nothing scanned yet" hint="The item appears here with what you can do next." />

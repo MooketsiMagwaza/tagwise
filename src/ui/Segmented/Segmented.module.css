@@ -17,6 +17,7 @@
   color: var(--color-text-secondary);
   font-size: var(--text-caption);
   font-weight: var(--weight-medium);
+  white-space: nowrap;
   transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
 }
 .option:hover {

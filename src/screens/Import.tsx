@@ -343,7 +343,7 @@ export default function Import() {
                 <Text as="h2" variant="headline">
                   Rows already in the register
                 </Text>
-                <Text tone="secondary">{dupes.length ? `${dupes.length} rows match an existing ${target === 'assets' ? 'tag' : 'SKU at the same site'}.` : 'None in this file.'}</Text>
+                <Text tone="secondary">{dupes.length ? `${dupes.length} ${dupes.length === 1 ? 'row matches' : 'rows match'} an existing ${target === 'assets' ? 'tag' : 'SKU at the same site'}.` : 'None in this file.'}</Text>
               </div>
               <RadioList<DuplicateMode>
                 label="What to do with rows already in the register"

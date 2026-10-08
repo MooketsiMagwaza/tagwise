@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, CalendarClock, ClipboardCheck, PackageMinus, ScanLine, Wrench } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CalendarClock, ClipboardCheck, PackageMinus, Wrench } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Avatar, Banner, ButtonLink, Card, CardHeader, Text } from '../ui';
 import { Link } from '../lib/router';
@@ -71,9 +71,6 @@ export default function Dashboard() {
             <ButtonLink href="/app/assets" variant="secondary">
               Open the register
             </ButtonLink>
-            <ButtonLink href="/app/scan" icon={<ScanLine size={16} />}>
-              Scan
-            </ButtonLink>
           </>
         }
       />
@@ -109,7 +106,7 @@ export default function Dashboard() {
                   icon={<PackageMinus size={18} />}
                   tone="warning"
                   title={`${count(low.length, 'stock line')} at or below reorder level`}
-                  detail={low
+                  detail={Array.from(new Map(low.map((k) => [k.name, k])).values())
                     .slice(0, 3)
                     .map((k) => `${k.name} (${k.quantity} left)`)
                     .join(', ')}
