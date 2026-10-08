@@ -1,0 +1,203 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-1);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow var(--duration-fast) var(--ease);
+}
+.item:hover {
+  box-shadow: var(--shadow-2);
+}
+.itemHead,
+.itemFoot {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.itemFoot {
+  align-items: center;
+}
+.avatars {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: var(--space-1);
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-separator);
+  border-radius: var(--radius-md);
+}
+.rooms legend {
+  padding: 0 var(--space-1);
+  font-weight: var(--weight-medium);
+}
+.room {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1);
+}
+.room input {
+  accent-color: var(--color-accent-text);
+}
+
+/* ── board ──────────────────────────────────────────────────────────── */
+.board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.figures {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.figure {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-fill);
+}
+.figure strong {
+  font-family: var(--font-display);
+  font-size: var(--text-headline);
+  font-variant-numeric: tabular-nums;
+}
+.figure span {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+}
+.feedback {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--tone) 12%, var(--color-surface-solid));
+  color: var(--color-text);
+  animation: pop var(--duration) var(--ease) both;
+}
+.feedback strong {
+  color: var(--tone);
+}
+.found { --tone: var(--color-success); }
+.wrong { --tone: var(--color-warning); }
+.other { --tone: var(--color-danger); }
+.repeat { --tone: var(--color-text-secondary); }
+
+.rooms2 {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.rooms2 th,
+.rooms2 td {
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-separator);
+  text-align: left;
+}
+.rooms2 thead th {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+}
+.rooms2 td:nth-child(2) {
+  width: 40%;
+}
+.feed {
+  max-height: 22rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.feed li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-separator);
+  animation: pop var(--duration) var(--ease) both;
+}
+.feed time {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-caption);
+}
+.feedText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mono {
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+}
+.missingList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.missingList li {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-separator);
+}
+.sim {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 960px) {
+  .board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .figures {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .item {
+    padding: var(--space-4);
+  }
+}
