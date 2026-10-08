@@ -19,6 +19,7 @@ const Stock = screen(() => import('./screens/Stock'));
 const StockDetail = screen(() => import('./screens/StockDetail'));
 const Scan = screen(() => import('./screens/Scan'));
 const Labels = screen(() => import('./screens/Labels'));
+const Import = screen(() => import('./screens/Import'));
 
 /** App routes, most specific first. `title` names the browser tab. */
 const ROUTES: { pattern: string; title: string; component: Screen }[] = [
@@ -30,6 +31,7 @@ const ROUTES: { pattern: string; title: string; component: Screen }[] = [
   { pattern: '/app/stock/:id', title: 'Stock line', component: StockDetail },
   { pattern: '/app/scan', title: 'Scan', component: Scan },
   { pattern: '/app/labels', title: 'Labels', component: Labels },
+  { pattern: '/app/import', title: 'Import', component: Import },
   { pattern: '/app/*', title: 'Not built yet', component: Soon },
 ];
 

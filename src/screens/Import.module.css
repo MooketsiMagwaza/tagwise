@@ -1,0 +1,217 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.uploadGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.drop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-12) var(--space-4);
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-fill);
+  color: var(--color-text-secondary);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+}
+.drop:hover,
+.dragging {
+  border-color: var(--color-brand);
+  background: var(--color-brand-soft);
+}
+.drop:focus-within {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+.dropTitle {
+  color: var(--color-text);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+}
+.dropHint {
+  font-size: var(--text-caption);
+}
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.notice {
+  margin-bottom: var(--space-3);
+}
+
+.mapTable,
+.checkTable {
+  overflow-x: auto;
+  margin-bottom: var(--space-4);
+}
+.mapTable table,
+.checkTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.mapTable th,
+.mapTable td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-separator);
+  text-align: left;
+  vertical-align: middle;
+}
+.mapTable thead th,
+.checkTable thead th {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+}
+.mapTable tbody th {
+  font-weight: var(--weight-medium);
+}
+.required {
+  color: var(--color-danger);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+}
+.fieldHint {
+  display: block;
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+}
+.select {
+  width: 100%;
+  min-width: 11rem;
+  height: 2.25rem;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-solid);
+  color: var(--color-text);
+}
+.sample {
+  color: var(--color-text-secondary);
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-medium);
+  background: color-mix(in srgb, var(--tone) 12%, var(--color-surface-solid));
+  color: var(--tone);
+}
+.good { --tone: var(--color-success); }
+.bad { --tone: var(--color-danger); }
+.dupe { --tone: var(--color-brand-ink); }
+
+.checkHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+.checkTable {
+  max-height: 30rem;
+  overflow: auto;
+  margin: 0;
+}
+.checkTable th,
+.checkTable td {
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-separator);
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.checkTable thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-glass-strong);
+}
+.rowNum {
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+.rowBad {
+  background: color-mix(in srgb, var(--color-danger) 5%, transparent);
+}
+.rowDupe {
+  background: color-mix(in srgb, var(--color-brand) 7%, transparent);
+}
+.cellBad {
+  color: var(--color-danger);
+  font-weight: var(--weight-medium);
+  text-decoration: underline wavy;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.cellWarn {
+  color: var(--color-warning);
+}
+.empty {
+  color: var(--color-text-tertiary);
+}
+.problems {
+  white-space: normal !important;
+  min-width: 18rem;
+}
+.problems span {
+  display: block;
+}
+.err { color: var(--color-danger); }
+.warn { color: var(--color-warning); }
+.dupeNote { color: var(--color-brand-ink); }
+.ok { color: var(--color-success); }
+
+.commitGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-8) 0;
+  text-align: center;
+}
+.doneIcon {
+  color: var(--color-success);
+}
+
+@media (max-width: 860px) {
+  .uploadGrid,
+  .commitGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
