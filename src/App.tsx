@@ -20,6 +20,8 @@ const StockDetail = screen(() => import('./screens/StockDetail'));
 const Scan = screen(() => import('./screens/Scan'));
 const Labels = screen(() => import('./screens/Labels'));
 const Import = screen(() => import('./screens/Import'));
+const Counts = screen(() => import('./screens/Counts'));
+const CountBoard = screen(() => import('./screens/CountBoard'));
 
 /** App routes, most specific first. `title` names the browser tab. */
 const ROUTES: { pattern: string; title: string; component: Screen }[] = [
@@ -32,6 +34,8 @@ const ROUTES: { pattern: string; title: string; component: Screen }[] = [
   { pattern: '/app/scan', title: 'Scan', component: Scan },
   { pattern: '/app/labels', title: 'Labels', component: Labels },
   { pattern: '/app/import', title: 'Import', component: Import },
+  { pattern: '/app/counts', title: 'Stock-takes', component: Counts },
+  { pattern: '/app/counts/:id', title: 'Stock-take', component: CountBoard },
   { pattern: '/app/*', title: 'Not built yet', component: Soon },
 ];
 
