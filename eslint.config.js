@@ -33,7 +33,7 @@ export default tseslint.config(
   },
   // Modules that pair a provider or helper with its hook are fine to mix.
   {
-    files: ['src/lib/**/*.tsx', 'src/ui/PrintPortal/*.tsx', 'src/data/**/*.tsx', 'src/app/**/*.tsx'],
+    files: ['src/lib/**/*.tsx', 'src/ui/PrintPortal/*.tsx', 'src/data/**/*.tsx', 'src/app/**/*.tsx', 'src/screens/**/*.tsx'],
     rules: { 'react-refresh/only-export-components': 'off' },
   },
   {
