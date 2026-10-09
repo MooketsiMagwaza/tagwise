@@ -477,7 +477,7 @@ services:
       dockerfile: docs-site/Dockerfile
       args:
         NEXT_PUBLIC_APP_URL: ${TW_DEV_APP_URL:-http://localhost:5290}
-        NEXT_PUBLIC_GRAFANA_URL: ${TW_DEV_GRAFANA_PUBLIC_URL:-http://localhost:3019}
+        NEXT_PUBLIC_GRAFANA_URL: ${TW_DEV_GRAFANA_PUBLIC_URL:-http://localhost:3029}
     image: tagwise/docs:dev
     container_name: tagwise-dev-docs
     restart: unless-stopped

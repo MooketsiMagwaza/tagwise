@@ -72,3 +72,29 @@ jobs:
         run: docker compose -f docker/observability/docker-compose.observability.yml config --quiet
       - name: Compose guard (labels, routes, networks, volumes, health checks)
         run: node docker/scripts/validate-compose.mjs
+
+  docs-site:
+    name: Docs site builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: docs-site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: docs-site/pnpm-lock.yaml
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Sync the Markdown and the API reference
+        run: node scripts/sync-content.mjs && pnpm exec fumadocs-mdx
+      - name: Build
+        run: pnpm exec next build
+      - name: Links in the published Markdown
+        run: pnpm check:links
