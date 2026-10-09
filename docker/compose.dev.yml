@@ -47,6 +47,10 @@ x-shared-env: &shared-env
   RATE_LIMIT_ENABLED: "true"
   CORS_ALLOWED_ORIGINS: ${TW_DEV_CORS_ORIGINS:-http://localhost:5290}
   LOG_JSON: "false"
+  # Traces go to the observability stack's OpenTelemetry collector when
+  # TW_DEV_OTEL_ENABLED=true (start docker/observability first). Off by default.
+  OTEL_ENABLED: ${TW_DEV_OTEL_ENABLED:-false}
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://tagwise-otel-collector:4317
 
 services:
   db:

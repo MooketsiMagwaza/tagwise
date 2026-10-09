@@ -68,5 +68,7 @@ jobs:
           node-version-file: .nvmrc
       - name: Render the dev stack
         run: docker compose -f docker/compose.dev.yml config --quiet
+      - name: Render the observability stack
+        run: docker compose -f docker/observability/docker-compose.observability.yml config --quiet
       - name: Compose guard (labels, routes, networks, volumes, health checks)
         run: node docker/scripts/validate-compose.mjs
