@@ -10,7 +10,7 @@
 #   docker build -f docker/nginx/Dockerfile -t tagwise/gateway:staging .
 #   docker build -f docker/nginx/Dockerfile \
 #     --build-arg GATEWAY_CONF=docker/nginx/gateway.dev.conf -t tagwise/gateway:dev .
-FROM nginx:1.27-alpine
+FROM nginx:1.31-alpine
 
 ARG GATEWAY_CONF=docker/nginx/gateway.conf
 COPY ${GATEWAY_CONF} /etc/nginx/conf.d/default.conf
