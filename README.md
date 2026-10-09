@@ -60,9 +60,10 @@ figure are invented, and the app says so on screen.
 | Register rules: stock never below zero under concurrent issues, idempotent adjustments, version conflicts on edits, workspace isolation, scan classification | **Tested**: 5 tests against PostgreSQL pass in CI |
 | API reference | **Real**: generated from the services' own OpenAPI documents (53 paths, 67 operations); a CI guard keeps the committed snapshot in step with the routes |
 | Documentation site (`docs-site/`) | **Builds** in CI; not deployed |
-| Docker development stack and gateway (`docker/`) | **Configuration**: renders and passes the compose guard in CI; never started |
+| Docker development stack and gateway (`docker/`) | **Configuration**: renders and passes the compose guard in CI. Only its PostgreSQL and Redis have been started; the service images have not been built |
 | Observability: Prometheus, Grafana, OpenTelemetry collector, Tempo | **Configuration**: renders; never started; no alert rules |
-| The services running together; sign-in by email or SMS code; push | **Scaffold**: never run; email, SMS and push need provider keys |
+| Identity and register running together | **Run once, outside containers**: on 9 Oct 2026 both ran from their binaries against the compose file's PostgreSQL and Redis, and `scripts/smoke-identity-register.mjs` passed 14 of 14 checks: sign-in by one-time code, register accepting identity's token, another account getting 404, and a signed-out token refused by register at once |
+| Notifications, media and ops running; sending email, SMS and push | **Scaffold**: never run; sending needs provider keys |
 | The app talking to the API | **Scaffold**: `HttpRepository` (tested against a fake server) is used only when the app is built with `VITE_API_URL`; there is no sign-in, so it has no token |
 | Register's outbox, notifications from register, live updates between devices | **Not wired** |
 | Staging and production | **None** |

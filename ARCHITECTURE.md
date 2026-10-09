@@ -97,6 +97,9 @@ These exist as code or configuration but do nothing yet:
 - Backend checks: see `docs/BACKEND.md`.
 - Whole stack: `docker compose -f docker/compose.dev.yml up -d --build`
   (not yet tried; see TW-21 in the work-order register).
+- Identity and register together: `scripts/smoke-identity-register.mjs`
+  (passed 14 of 14 on 9 October 2026, services run outside containers; see
+  `docs/BACKEND.md`).
 - Metrics and traces: `docs/OBSERVABILITY.md`.
 
 ## Repository layout
