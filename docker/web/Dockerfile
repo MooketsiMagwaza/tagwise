@@ -1,7 +1,7 @@
 # The Tagwise web app as a static build behind a plain nginx. The gateway
 # (docker/nginx) proxies to this container's port 80 like any other service.
 # Built from the repository root: docker build -f docker/web/Dockerfile .
-FROM node:22-slim AS builder
+FROM node:25-slim AS builder
 WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
