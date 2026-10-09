@@ -27,7 +27,7 @@ use tower_http::limit::RequestBodyLimitLayer;
 use tower_http::request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer};
 use tower_http::sensitive_headers::SetSensitiveRequestHeadersLayer;
 use tower_http::timeout::TimeoutLayer;
-use tower_http::trace::TraceLayer;
+use tower_http::trace::{DefaultOnResponse, TraceLayer};
 
 use crate::config::{CorsConfig, RateLimitConfig};
 use crate::database::redis::RedisPool;
@@ -77,7 +77,15 @@ where
         .layer(RequestBodyLimitLayer::new(MAX_BODY_BYTES))
         .layer(TimeoutLayer::new(REQUEST_TIMEOUT))
         .layer(CatchPanicLayer::new())
-        .layer(TraceLayer::new_for_http().make_span_with(request_span))
+        // One INFO line per response (status and latency), inside the request's
+        // span, so every request leaves a log line carrying its request id.
+        // tower-http logs responses at DEBUG by default, which the usual
+        // RUST_LOG settings hide.
+        .layer(
+            TraceLayer::new_for_http()
+                .make_span_with(request_span)
+                .on_response(DefaultOnResponse::new().level(tracing::Level::INFO)),
+        )
         // Wraps TraceLayer (not the other way around) so request logging
         // never sees a raw Authorization/Cookie value in the first place.
         .layer(SetSensitiveRequestHeadersLayer::new([
