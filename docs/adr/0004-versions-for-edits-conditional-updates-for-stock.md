@@ -26,5 +26,5 @@ requests.
 
 - Clients must keep and send versions and make idempotency keys.
 - A conflict needs a screen to resolve it, which the app has.
-- The concurrency tests need PostgreSQL and have not been run yet
-  (`backend/crates/register/tests/register_db.rs`).
+- The concurrency tests need PostgreSQL, so they run in their own CI job
+  (`backend/crates/register/tests/register_db.rs`); they pass there.

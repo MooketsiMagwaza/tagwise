@@ -90,6 +90,8 @@ jobs:
           node-version: 24
           cache: pnpm
           cache-dependency-path: docs-site/pnpm-lock.yaml
+      - name: OpenAPI snapshot matches the services' routes
+        run: node ../scripts/openapi-coverage.mjs && node --test ../scripts/openapi-coverage.test.mjs
       - name: Install
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Sync the Markdown and the API reference
@@ -98,3 +100,35 @@ jobs:
         run: pnpm exec next build
       - name: Links in the published Markdown
         run: pnpm check:links
+
+  register-db:
+    name: Register database tests (PostgreSQL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: tagwise
+          POSTGRES_PASSWORD: tagwise
+          POSTGRES_DB: tagwise_register
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      TEST_DATABASE_URL: postgres://tagwise:tagwise@localhost:5432/tagwise_register
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: backend
+      - name: Concurrency, idempotency, conflicts, isolation, scan classification
+        run: cargo test -p tagwise-register --test register_db -- --ignored --test-threads=1

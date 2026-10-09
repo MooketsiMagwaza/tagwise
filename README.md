@@ -6,10 +6,13 @@ count a site with several people at once, and see every site on a map. Built
 for schools, clinics, offices and stores that keep their register in Excel
 today.
 
-**Status: prototype.** It runs entirely in the browser with a fictional
-sample organisation. There is no server, no sign-in and no real data yet.
-What is real and what is not is listed below and in
-[docs/WORK_ORDERS.md](docs/WORK_ORDERS.md).
+**Status: prototype.** The app runs entirely in the browser with a
+fictional sample organisation: no sign-in and no real data yet. Behind it
+sits a backend (five Rust services, a Docker stack with a gateway,
+observability and a documentation site) that is tested in CI but has never
+been run as a whole and is not yet connected to the app. What is real and
+what is scaffold is listed below, in [ARCHITECTURE.md](ARCHITECTURE.md) and
+in [docs/WORK_ORDERS.md](docs/WORK_ORDERS.md).
 
 | Light | Dark |
 | --- | --- |
@@ -37,7 +40,7 @@ figure are invented, and the app says so on screen.
 | Register (assets and stock): saved views, filters, sort, columns, search, bulk selection | Works in the browser |
 | Asset and stock pages: edit, check out and in, issue and receive, comments, history | Works in the browser |
 | Shared editing | A stale edit is caught (version check) and you choose which version to keep. Shown working between two tabs |
-| Live updates and presence | Real between tabs of the same browser (BroadcastChannel). Across devices it needs the server, which does not exist yet |
+| Live updates and presence | Real between tabs of the same browser (BroadcastChannel). Across devices it needs the app connected to the server, which is not done yet |
 | Simulated teammates | Demo only: sample members shown as present (dashed ring) and an optional simulated counter in stock-takes. Labelled on screen and can be switched off |
 | Scanning | Typed codes and handheld scanners work. Camera decoding (BarcodeDetector, with ZXing as the fallback) is built but **not yet tested on a real phone** |
 | QR labels | A4 sheets of 18 and single labels render with working QR codes. **Not yet printed and scanned from paper** |
@@ -45,9 +48,28 @@ figure are invented, and the app says so on screen.
 | Excel and CSV export | Built, with a formula guard. The files were not opened in a spreadsheet program during testing |
 | Stock-takes | Works in the browser (tried with the simulated counter, typed scans, repeats and unknown codes). Updates between tabs use the same mechanism that was shown working for edits |
 | Sites map | Works with an internet connection (OpenFreeMap tiles) |
-| Roles | Owner, admin, editor, auditor, viewer. Enforced in the interface only: there is no server to enforce them yet |
+| Roles | Owner, admin, editor, auditor, viewer. Enforced in the interface only; the register service enforces the same table, but the app does not use it yet |
 | Sign-in, accounts, email | Not built. You pick a sample member to act as |
 | Data storage | This browser's local storage only. Nothing is sent anywhere |
+
+## The backend: real and scaffold
+
+| Part | State |
+| --- | --- |
+| Services (shared, identity, register, notifications, media, ops) | **Tested**: formatting, clippy with warnings as errors, and 51 unit tests pass in CI |
+| Register rules: stock never below zero under concurrent issues, idempotent adjustments, version conflicts on edits, workspace isolation, scan classification | **Tested**: 5 tests against PostgreSQL pass in CI |
+| API reference | **Real**: generated from the services' own OpenAPI documents (53 paths, 67 operations); a CI guard keeps the committed snapshot in step with the routes |
+| Documentation site (`docs-site/`) | **Builds** in CI; not deployed |
+| Docker development stack and gateway (`docker/`) | **Configuration**: renders and passes the compose guard in CI. Only its PostgreSQL and Redis have been started; the service images have not been built |
+| Observability: Prometheus, Grafana, OpenTelemetry collector, Tempo | **Configuration**: renders; never started; no alert rules |
+| Identity and register running together | **Run once, outside containers**: on 9 Oct 2026 both ran from their binaries against the compose file's PostgreSQL and Redis, and `scripts/smoke-identity-register.mjs` passed 14 of 14 checks: sign-in by one-time code, register accepting identity's token, another account getting 404, and a signed-out token refused by register at once |
+| Notifications, media and ops running; sending email, SMS and push | **Scaffold**: never run; sending needs provider keys |
+| The app talking to the API | **Scaffold**: `HttpRepository` (tested against a fake server) is used only when the app is built with `VITE_API_URL`; there is no sign-in, so it has no token |
+| Register's outbox, notifications from register, live updates between devices | **Not wired** |
+| Staging and production | **None** |
+
+Where the backend came from, measured line by line, is in
+[PROVENANCE.md](PROVENANCE.md).
 
 ## Run it
 
@@ -68,13 +90,21 @@ npm run dev        # http://localhost:5280
 | `npm test` | Unit tests (Vitest) |
 | `npm run check:names` | Name gate: fails if another of the owner's product names appears in the code |
 | `npm run screenshots` | Captures the screenshots above from a running dev server, using the Edge already installed |
+| `npm run check:openapi` | Checks that the API snapshot matches the services' routes |
+
+The backend's commands (build, lint, tests, database tests) are in
+[docs/BACKEND.md](docs/BACKEND.md); the documentation site's in
+[docs-site/README.md](docs-site/README.md).
 
 ## How it is built
 
 - **React 18, TypeScript, Vite.** A static single-page app; any static host can serve `dist/`.
-- **Data layer behind an interface** (`src/data/repository.ts`). Screens call only that interface. `LocalRepository` implements it on localStorage with a seeded sample workspace; an API-backed implementation can replace it without touching the screens.
+- **Data layer behind an interface** (`src/data/repository.ts`). Screens call only that interface. `LocalRepository` implements it on localStorage with a seeded sample workspace; `HttpRepository` (a scaffold) implements part of it over the register API.
 - **Design tokens** in `src/theme/tokens.css`; components in `src/ui` and `src/app` read only those tokens. Light and dark are separate palettes; reduced motion and reduced transparency are honoured.
 - **Route-level code splitting**, so the map, the spreadsheet library and the scanner fallback load only on the pages that need them.
+- **Backend** (`backend/`): a Rust workspace of five services (axum, sqlx, PostgreSQL, Redis), each with its own database and migrations. See [ARCHITECTURE.md](ARCHITECTURE.md).
+- **Docker** (`docker/`): a development stack behind an nginx gateway, and an observability stack.
+- **Decisions** are recorded in [docs/adr](docs/adr/README.md); security in [SECURITY.md](SECURITY.md); how to contribute in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Deploy
 
@@ -95,7 +125,9 @@ Set up for Vercel. No environment variables are needed. See
 | @fontsource-variable/schibsted-grotesk | Display typeface, self-hosted | OFL-1.1 |
 
 Development only: TypeScript, Vite, Vitest, ESLint and its plugins, jsdom,
-playwright-core (screenshots). Map tiles come from
+playwright-core (screenshots). The backend's crates are listed in
+`backend/Cargo.toml` and the documentation site's packages in
+`docs-site/package.json`. Map tiles come from
 [OpenFreeMap](https://openfreemap.org) (free, no key), with data ©
 OpenStreetMap contributors.
 

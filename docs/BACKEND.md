@@ -49,8 +49,32 @@ TEST_DATABASE_URL=postgres://tagwise:tagwise@localhost:5453/tagwise_register \
 They cover: stock never going below zero when ten requests issue at once,
 a retried adjustment applying once, a stale asset edit coming back as a
 conflict, another workspace getting "not found", and scan classification.
-**They have not been run yet**: Docker was not running on the machine they
-were written on.
+CI runs them on every pull request against a PostgreSQL service (the
+`register-db` job); all five passed on 9 October 2026. They have not been
+run on the development machine, where Docker was not running.
+
+## Identity and register together
+
+`scripts/smoke-identity-register.mjs` checks the two services working as one
+system: two accounts sign in by one-time code, one creates a workspace in
+register, the other gets 404 for it, and after the first signs out at
+identity, register refuses the old token at once (the shared Redis denylist).
+It runs against the gateway by default, or against the services directly:
+
+```sh
+docker compose -f docker/compose.dev.yml up -d db redis
+# start identity (OTP_DEV_ECHO_ENABLED=true) and register with the compose
+# file's environment, pointed at localhost:5453 and localhost:6391, after
+# running each binary's `migrate`; then:
+TW_IDENTITY_URL=http://127.0.0.1:8281 TW_REGISTER_URL=http://127.0.0.1:8282 \
+  node scripts/smoke-identity-register.mjs
+```
+
+On 9 October 2026 it passed 14 of 14 checks that way, with both services
+running from their development binaries. It has not been run through the
+gateway, because the service images have not been built: the backend
+Dockerfile does one release build per service, which did not fit the
+development machine's free disk.
 
 ## Running a service on its own
 

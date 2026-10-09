@@ -13,7 +13,7 @@ you want it to be.
 | Part | State | What that means |
 | --- | --- | --- |
 | Web app (deployed) | Browser only | No server, no accounts, no real data. Everything lives in the visitor's own browser storage and is never sent anywhere. Roles are enforced in the interface only, which is no protection; it does not need to be while each browser holds only its own sample data |
-| Backend (`backend/`) | Compiled and unit-tested, never deployed | The protections below are in the code; none has been exercised against a running system or tested by anyone else |
+| Backend (`backend/`) | Tested in CI, never deployed | The protections below are in the code. Unit tests cover them, and the register's data rules are tested against PostgreSQL; none has been exercised against a running system or tested by anyone else |
 
 ## Protections in the backend code
 
