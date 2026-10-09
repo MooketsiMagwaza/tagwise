@@ -1,0 +1,39 @@
+# Weekly update proposals for every ecosystem in the repository. Minor and
+# patch updates are grouped into one pull request per ecosystem; major
+# versions arrive one at a time so each can be read on its own.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 5
+    groups:
+      web-minor:
+        update-types: [minor, patch]
+    ignore:
+      # SheetJS is installed from cdn.sheetjs.com, not the npm registry.
+      - dependency-name: xlsx
+
+  - package-ecosystem: npm
+    directory: /docs-site
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 3
+    groups:
+      docs-minor:
+        update-types: [minor, patch]
+
+  - package-ecosystem: cargo
+    directory: /backend
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 5
+    groups:
+      rust-minor:
+        update-types: [minor, patch]
+
+  - package-ecosystem: docker
+    directories: [/backend, /docker/web, /docker/nginx, /docs-site]
+    schedule: { interval: weekly, day: monday }
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly, day: monday }
