@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type { Lookups } from './fields';
 import { broadcast, onLive, tabId } from './live';
+import { HttpRepository } from './http';
 import { LocalRepository } from './local';
 import { can, type Action } from './permissions';
 import type { Repository } from './repository';
@@ -12,10 +13,23 @@ import type { Person } from './types';
 
 let instance: Repository | null = null;
 
-/** The app's repository. Swap this for an API-backed one later. */
+/** The app's repository: the browser's own storage, unless the app was
+ *  built with VITE_API_URL, in which case the API (a scaffold: there is no
+ *  sign-in yet, so it has no token to send; see src/data/http.ts). */
 export function repo(): Repository {
-  if (!instance) instance = new LocalRepository();
+  if (!instance) instance = createRepository();
   return instance;
+}
+
+function createRepository(): Repository {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (!apiUrl) return new LocalRepository();
+  return new HttpRepository({
+    baseUrl: apiUrl,
+    workspaceId: import.meta.env.VITE_WORKSPACE_ID ?? '',
+    // Sign-in is not built yet (TW-15), so there is no token to send.
+    token: () => null,
+  });
 }
 
 /** Runs `load` now and again after every change. Keeps the last result on
