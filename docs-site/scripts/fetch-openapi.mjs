@@ -55,8 +55,6 @@ const PUBLIC_OPERATIONS = new Set([
   'POST /v1/auth/refresh',
   'POST /v1/auth/api-key/token',
   'GET /v1/media/local/{key}',
-  'GET /health/live',
-  'GET /health/ready',
 ]);
 
 /** Asks the service binary to print its own document. */

@@ -29,7 +29,7 @@
  * to other repository files go to GitHub. Images under public/screens/ are
  * served from the site's own copy.
  */
-import fs from 'node:fs'; from 'node:fs';
+import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';

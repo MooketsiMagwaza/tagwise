@@ -17,14 +17,9 @@
  * satisfied if the directory exists (covers links to a folder that has its
  * own README).
  *
- * Pending paths: some links point at files another concurrent workstream is
- * about to add (for example the payments contract under
- * `docs/backend-alignment/payments/` and
- * `docs/backend-alignment/contracts/08-payments-provider-neutral.md`). Rather
- * than an allowlist keyed to today's date, this script reports those
- * separately from hard failures: any target under a path listed in
- * PENDING_PATH_PREFIXES is printed as a pending note and does not affect the
- * exit code. Everything else that is missing is a hard failure.
+ * Pending paths: a link to a file that another piece of work is about to add
+ * can be listed in PENDING_PATH_PREFIXES; it is then reported as a note
+ * without failing. The list is empty: every link must resolve.
  *
  * Usage:
  *   node scripts/check-links.mjs
@@ -43,8 +38,6 @@ const repoRoot = path.resolve(here, '../..');
 // Directories/files that are allowed to not exist yet because a concurrent
 // workstream is actively creating them. Reported separately, never fails.
 const PENDING_PATH_PREFIXES = [
-  'docs/backend-alignment/payments/',
-  'docs/backend-alignment/contracts/08-payments-provider-neutral.md',
 ];
 
 const LINK_RE = /\[[^\]\n]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
