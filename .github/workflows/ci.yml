@@ -56,3 +56,17 @@ jobs:
         run: cargo clippy --workspace --all-targets -- -D warnings
       - name: Tests (database tests are ignored; see docs/BACKEND.md)
         run: cargo test --workspace
+
+  compose:
+    name: Compose files render and pass the guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Render the dev stack
+        run: docker compose -f docker/compose.dev.yml config --quiet
+      - name: Compose guard (labels, routes, networks, volumes, health checks)
+        run: node docker/scripts/validate-compose.mjs

@@ -1,0 +1,10 @@
+node_modules
+dist
+backend/target
+docs-site/node_modules
+docs-site/.next
+.git
+.env
+.env.*
+!.env.example
+*.log
