@@ -1,0 +1,88 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* The app's own theme tokens (light and dark), generated from
+   src/theme/tokens.css by scripts/sync-content.mjs. Never edited here. */
+@import './theme-tokens.css';
+
+/* Every Fumadocs colour is one of the app's tokens, so the docs are light
+   and dark exactly as the app is. Nothing below hard-codes a colour. */
+:root,
+.dark {
+  --color-fd-background: var(--color-bg);
+  --color-fd-foreground: var(--color-text);
+  --color-fd-muted: var(--color-fill);
+  --color-fd-muted-foreground: var(--color-text-secondary);
+  --color-fd-popover: var(--color-glass-strong);
+  --color-fd-popover-foreground: var(--color-text);
+  --color-fd-card: var(--color-surface);
+  --color-fd-card-foreground: var(--color-text);
+  --color-fd-border: var(--color-separator);
+  /* Links and active items: the text accent (brighter in dark); the fill on
+     it flips with it so a button stays legible. */
+  --color-fd-primary: var(--color-accent-text);
+  --color-fd-primary-foreground: var(--color-surface);
+  --color-fd-secondary: var(--color-fill);
+  --color-fd-secondary-foreground: var(--color-text);
+  --color-fd-accent: var(--color-fill-hover);
+  --color-fd-accent-foreground: var(--color-text);
+  --color-fd-ring: var(--color-focus);
+  --color-fd-overlay: var(--color-scrim);
+  --color-fd-info: var(--color-accent-text);
+  --color-fd-success: var(--color-success);
+  --color-fd-warning: var(--color-warning);
+  --color-fd-error: var(--color-danger);
+}
+
+/* Fumadocs re-tints the dark sidebar with an id selector; keep it on the tokens. */
+#nd-sidebar,
+.dark #nd-sidebar {
+  --color-fd-muted: var(--color-fill);
+  --color-fd-secondary: var(--color-fill);
+  --color-fd-muted-foreground: var(--color-text-secondary);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+
+/* Headlines: tighter, heavier, like the app's. */
+.prose h1,
+#nd-page h1 {
+  font-size: clamp(2rem, 4vw, var(--text-display));
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+.prose h2,
+#nd-page h2 {
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-title);
+}
+.prose h3,
+#nd-page h3 {
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-headline);
+}
+
+/* Screenshots in the guides: rounded like the app's surfaces. The gallery
+   shows each page's light and dark capture side by side. */
+.prose img {
+  border-radius: var(--radius-lg);
+}
+
+/* No gradients, as in the app. Fumadocs fades the ends of its
+   scrolling sidebar, table of contents and tab strips with an alpha mask made
+   from a gradient; content there is simply cut at the edge instead. */
+[class*='mask-[linear-gradient'] {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* Focus rings read on both themes. */
+:focus-visible {
+  outline-color: var(--color-focus);
+}
