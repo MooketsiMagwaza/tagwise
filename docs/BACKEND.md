@@ -49,8 +49,9 @@ TEST_DATABASE_URL=postgres://tagwise:tagwise@localhost:5453/tagwise_register \
 They cover: stock never going below zero when ten requests issue at once,
 a retried adjustment applying once, a stale asset edit coming back as a
 conflict, another workspace getting "not found", and scan classification.
-**They have not been run yet**: Docker was not running on the machine they
-were written on.
+CI runs them on every pull request against a PostgreSQL service (the
+`register-db` job); all five passed on 9 October 2026. They have not been
+run on the development machine, where Docker was not running.
 
 ## Running a service on its own
 

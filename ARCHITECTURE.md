@@ -6,7 +6,8 @@ Tagwise has two halves that are not connected yet:
    own, with sample data kept in the browser. This is what is deployed.
 2. **The backend** (`backend/`, `docker/`): five Rust services behind an
    nginx gateway, with PostgreSQL, Redis and an observability stack. It
-   compiles and its unit tests pass; it has not been run as a whole.
+   compiles, its unit tests pass, and the register service's database
+   tests pass against PostgreSQL in CI; it has not been run as a whole.
 
 Joining them is TW-15: the app gets a second implementation of its data
 interface that calls the API instead of the browser's storage.
@@ -46,7 +47,7 @@ pending. All of them share `backend/crates/shared`.
 | Service | Owns | State |
 | --- | --- | --- |
 | identity | Accounts, sign-in by one-time code (email or SMS), sessions and refresh tokens, API keys, staff accounts and the audit log | Carried over from the owner's earlier platform and trimmed; unit tests pass |
-| register | Workspaces and memberships, people, sites and places, assets, stock lines and movements, stock-takes and scans, comments, activity, saved views | New for Tagwise, on the earlier platform's service scaffolding; 4 unit tests pass, 5 database tests written but not run |
+| register | Workspaces and memberships, people, sites and places, assets, stock lines and movements, stock-takes and scans, comments, activity, saved views | New for Tagwise, on the earlier platform's service scaffolding; 4 unit tests pass, and 5 database tests pass against PostgreSQL in CI |
 | notifications | In-app inbox, preferences, push devices (FCM) | Carried over; nothing sends to it yet |
 | media | Presigned upload and download URLs for attachments | Carried over |
 | ops | Support tickets; the staff console's views of service health, database figures and alerts (from Prometheus and Grafana) | Carried over; register figures replace order figures |
