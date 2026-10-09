@@ -13,7 +13,9 @@ const noInlineStyle = {
 };
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules'] },
+  // docs-site is its own Next.js package with its own CI job; backend is Rust
+  // (its target/ holds generated JavaScript).
+  { ignores: ['dist', 'coverage', 'node_modules', 'docs-site', 'backend'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
