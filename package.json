@@ -15,6 +15,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "check:names": "node scripts/name-gate.mjs",
+    "check:openapi": "node scripts/openapi-coverage.mjs && node --test scripts/openapi-coverage.test.mjs",
     "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {

@@ -4,7 +4,7 @@
 //! ```sh
 //! docker compose -f docker/compose.dev.yml up -d db
 //! cd backend
-//! TEST_DATABASE_URL=postgres://tagwise:tagwise@localhost:5443/tagwise_register \
+//! TEST_DATABASE_URL=postgres://tagwise:tagwise@localhost:5453/tagwise_register \
 //!   cargo test -p tagwise-register --test register_db -- --ignored --test-threads=1
 //! ```
 //!
