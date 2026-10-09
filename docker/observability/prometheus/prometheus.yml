@@ -1,0 +1,59 @@
+# Tagwise scrape config: one job per service (the job name is what the admin
+# console looks up), plus cAdvisor for container memory. Prometheus must be on
+# the tagwise-dev-app network to resolve the service names (see
+# docker-compose.observability.yml).
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  external_labels:
+    stack: tagwise
+
+scrape_configs:
+  - job_name: identity
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ["identity:8080"]
+        labels:
+          component: identity
+
+  - job_name: register
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ["register:8080"]
+        labels:
+          component: register
+
+  - job_name: notifications
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ["notifications:8080"]
+        labels:
+          component: notifications
+
+  - job_name: media
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ["media:8080"]
+        labels:
+          component: media
+
+  - job_name: ops
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ["ops:8080"]
+        labels:
+          component: ops
+
+  # Container memory and CPU, for the admin console (see the cadvisor service).
+  - job_name: cadvisor
+    static_configs:
+      - targets: ["cadvisor:8080"]
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

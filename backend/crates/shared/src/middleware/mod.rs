@@ -77,7 +77,7 @@ where
         .layer(RequestBodyLimitLayer::new(MAX_BODY_BYTES))
         .layer(TimeoutLayer::new(REQUEST_TIMEOUT))
         .layer(CatchPanicLayer::new())
-        .layer(TraceLayer::new_for_http())
+        .layer(TraceLayer::new_for_http().make_span_with(request_span))
         // Wraps TraceLayer (not the other way around) so request logging
         // never sees a raw Authorization/Cookie value in the first place.
         .layer(SetSensitiveRequestHeadersLayer::new([
@@ -87,6 +87,23 @@ where
         .layer(PropagateRequestIdLayer::x_request_id())
         // Outermost: every request gets an id before anything else runs.
         .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
+}
+
+/// The span every request is logged and traced under. It carries the
+/// request id (set by the outermost layer, so it is always present here), so
+/// a log line, a trace and the id returned to the caller can be matched up.
+fn request_span(request: &axum::http::Request<axum::body::Body>) -> tracing::Span {
+    let request_id = request
+        .headers()
+        .get("x-request-id")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("-");
+    tracing::info_span!(
+        "request",
+        method = %request.method(),
+        path = %request.uri().path(),
+        request_id = %request_id,
+    )
 }
 
 /// Exact-origin allow-list — never a wildcard (enforced at config load, see
