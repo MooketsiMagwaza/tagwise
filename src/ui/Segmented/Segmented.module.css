@@ -1,4 +1,6 @@
-/* Equal-width segments filling the row, like a native segmented control. */
+/* A native-style segmented control: a recessed pill track with the chosen
+   segment raised on a solid surface. By default the segments share the row
+   equally; `.fit` sizes them to their labels. */
 .group {
   display: flex;
   gap: 2px;
@@ -7,7 +9,22 @@
   background: var(--color-fill);
 }
 
+/* Content-sized: never wider than its container; scrolls inside the track. */
+.fit {
+  display: inline-flex;
+  align-self: flex-start;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.fit::-webkit-scrollbar {
+  display: none;
+}
+
 .option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
   min-height: 1.75rem;
   padding: 0 var(--space-3);
@@ -17,11 +34,21 @@
   color: var(--color-text-secondary);
   font-size: var(--text-caption);
   font-weight: var(--weight-medium);
+  text-decoration: none;
   white-space: nowrap;
   transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
 }
+.fit .option {
+  flex: 0 0 auto;
+  min-height: 2rem;
+  padding: 0 var(--space-4);
+  font-size: var(--text-small);
+}
 .option:hover {
   color: var(--color-text);
+}
+.option:focus-visible {
+  outline-offset: -2px;
 }
 .selected {
   background: var(--color-surface-solid);

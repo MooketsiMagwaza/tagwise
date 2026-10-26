@@ -30,7 +30,7 @@ export { PrintPortal, printNow, type Paper } from './PrintPortal/PrintPortal';
 export { QrCode } from './QrCode/QrCode';
 export { RadioList, type RadioOption } from './RadioList/RadioList';
 export { MenuItem, Popover, PopoverDivider, PopoverHeader } from './Popover/Popover';
-export { Segmented } from './Segmented/Segmented';
+export { Segmented, SegmentedLinks } from './Segmented/Segmented';
 export { CardSkeleton, SkeletonLines } from './Skeleton/Skeleton';
 export { Sparkline } from './Sparkline/Sparkline';
 export { Switch } from './Switch/Switch';

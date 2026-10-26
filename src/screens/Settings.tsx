@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Download, RotateCcw, UserPlus } from 'lucide-react';
-import { Avatar, Banner, Button, Card, CardHeader, ConfirmDialog, Form, Modal, Row, Segmented, SelectField, Switch, Text, TextField } from '../ui';
-import { Link, useLocation } from '../lib/router';
+import { Avatar, Banner, Button, Card, CardHeader, ConfirmDialog, Form, Modal, Row, Segmented, SegmentedLinks, SelectField, Switch, Text, TextField } from '../ui';
+import { useLocation } from '../lib/router';
 import { useToast } from '../lib/toast';
 import { relativeTime } from '../lib/format';
 import { downloadBlob } from '../lib/csv';
@@ -312,13 +312,7 @@ export default function Settings() {
   return (
     <div className={styles.page}>
       <ScreenHeader title="Settings" />
-      <nav className={styles.tabs} aria-label="Settings sections">
-        {SECTIONS.map((s) => (
-          <Link key={s.href} href={s.href} className={styles.tab} aria-current={s.href === section.href ? 'page' : undefined}>
-            {s.label}
-          </Link>
-        ))}
-      </nav>
+      <SegmentedLinks label="Settings sections" items={SECTIONS.map((s) => ({ ...s, current: s.href === section.href }))} />
       <div className={styles.body}>
         {section.href === '/app/settings' && <WorkspaceSection />}
         {section.href === '/app/settings/people' && <PeopleSection />}

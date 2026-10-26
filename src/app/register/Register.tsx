@@ -1,11 +1,11 @@
 // The register: a Notion-style database table shared by Assets and Stock.
-// Saved views as tabs, search, filter chips, sortable columns, a column
+// Saved views as a segmented control, search, filter chips, sortable columns, a column
 // picker, row selection with bulk actions, CSV export of what you see, and
 // a card list on phones. Everything reflects changes from other tabs live.
 
 import { useEffect, useState, type ReactNode } from 'react';
 import { ArrowDown, ArrowUp, Columns3, Download, ListFilter, Plus, Save, X } from 'lucide-react';
-import { Button, EmptyState, Form, Input, Modal, Row, TextField } from '../../ui';
+import { Button, EmptyState, Form, Input, Modal, Row, Segmented, TextField } from '../../ui';
 import { navigate, useLocation } from '../../lib/router';
 import { downloadCsv } from '../../lib/csv';
 import { downloadXlsx } from '../../lib/sheet';
@@ -267,13 +267,18 @@ export function Register<T extends { id: string }>({ collection, fields, columns
 
   return (
     <div className={styles.register}>
-      <div className={styles.tabs} role="tablist" aria-label="Saved views">
-        {(views.data ?? []).map((v) => (
-          <button key={v.id} type="button" role="tab" aria-selected={v.id === view?.id} className={styles.tab} onClick={() => chooseView(v)}>
-            {v.name}
-          </button>
-        ))}
-      </div>
+      {!!views.data?.length && (
+        <Segmented
+          fit
+          label="Saved views"
+          options={views.data.map((v) => ({ value: v.id, label: v.name }))}
+          value={view?.id ?? ''}
+          onChange={(id) => {
+            const next = views.data?.find((v) => v.id === id);
+            if (next) chooseView(next);
+          }}
+        />
+      )}
 
       <div className={styles.toolbar}>
         <div className={styles.searchBox}>
