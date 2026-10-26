@@ -73,7 +73,20 @@ const SIZES = {
   phone: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
 };
 // Quality chosen so every file stays under about 150 KB.
-const QUALITY = { desktop: { webp: 80, jpeg: 80 }, phone: { webp: 72, jpeg: 70 } };
+const QUALITY = { desktop: { webp: 80, jpeg: 80 }, phone: { webp: 72, jpeg: 68 } };
+
+/** Runs in the page: re-encodes a base64 PNG with the browser's encoders. */
+/* global atob, btoa, Blob, createImageBitmap, OffscreenCanvas */
+async function encode({ b64, type, quality }) {
+  const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  const bitmap = await createImageBitmap(new Blob([bytes], { type: 'image/png' }));
+  const canvas = new OffscreenCanvas(bitmap.width, bitmap.height);
+  canvas.getContext('2d').drawImage(bitmap, 0, 0);
+  const out = new Uint8Array(await (await canvas.convertToBlob({ type, quality })).arrayBuffer());
+  let s = '';
+  for (let i = 0; i < out.length; i += 0x8000) s += String.fromCharCode(...out.subarray(i, i + 0x8000));
+  return btoa(s);
+}
 
 // Software WebGL, so the map draws in a headless browser.
 const browser = await chromium.launch({ channel: CHANNEL, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -93,10 +106,12 @@ for (const theme of ['light', 'dark']) {
     if (shot.settle) await wait(shot.settle);
     if (!shot.keepScroll) await page.evaluate(() => window.scrollTo(0, 0));
     await wait(200);
-    const cdp = await context.newCDPSession(page);
+    // Playwright's PNG honours the 2x phone pixel ratio (a raw DevTools
+    // capture does not); the browser then encodes it as WebP and JPEG.
+    const png = (await page.screenshot({ type: 'png' })).toString('base64');
     const sizes = [];
-    for (const [format, ext] of [['webp', 'webp'], ['jpeg', 'jpg']]) {
-      const { data } = await cdp.send('Page.captureScreenshot', { format, quality: QUALITY[shot.size][format] });
+    for (const [type, ext, key] of [['image/webp', 'webp', 'webp'], ['image/jpeg', 'jpg', 'jpeg']]) {
+      const data = await page.evaluate(encode, { b64: png, type, quality: QUALITY[shot.size][key] / 100 });
       const file = `${OUT}/${shot.name}-${theme}.${ext}`;
       writeFileSync(file, Buffer.from(data, 'base64'));
       sizes.push(`${ext} ${Math.round(statSync(file).size / 1024)} KB`);
