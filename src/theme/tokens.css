@@ -17,7 +17,23 @@
    Contrast (WCAG AA, measured with the translucent surface composited over
    the canvas): text 16:1 light / 14:1 dark, secondary 6.9 / 7.9, tertiary
    4.6 / 5.3, control borders 3.0 / 4.6, link blue 5.9 / 8.3, status tones
-   5.4 to 6.4 light and 7.6 to 10.2 dark, white on the ink action 17.5. */
+   5.4 to 6.4 light and 7.6 to 10.2 dark, white on the ink action 17.5.
+
+   The public page (--mk-*, below) has its own palette: white and light-grey
+   bands, near-black text and one blue for the primary action, the same
+   #1d5bb8 the app uses for links. Computed with the WCAG 2.x formula by a
+   script on 26 Oct 2026 (not estimated):
+     light  white on the blue button 6.48:1 (hover #174a99 8.48, pressed
+            #133e82 10.30); blue link on white 6.48, on the grey band 5.99,
+            on the blue tint 5.65; text 17.51 on white, 16.19 on the band;
+            secondary text 7.59 / 7.02 / 6.62 (white, band, tint); outline
+            button border 4.74 / 4.38; the button itself against white 6.48;
+            focus ring 17.51; "Demo data" chip 6.49.
+     dark   dark text on the light-blue button 9.48:1 (hover 11.34, pressed
+            13.34); link on the page 9.17, band 8.51, tiles 7.96; text 15.57 /
+            14.44 / 13.51; secondary 8.71 / 8.07 / 7.55; outline border 5.08 /
+            4.71; the button against the page 9.17; focus ring 18.50; chip
+            11.37. Every pair passes AA (4.5:1 text, 3:1 non-text). */
 
 :root,
 [data-theme='light'] {
@@ -144,10 +160,62 @@
   --ease: cubic-bezier(0.2, 0, 0, 1);
   --duration-fast: 150ms;
   --duration: 220ms;
+
+  /* ── public page (src/screens/Landing): its own flat, banded palette ── */
+  --mk-bg: #ffffff;
+  --mk-band: #f5f6f8;
+  --mk-tint: #e9f0fb;
+  --mk-surface: #ffffff;
+  --mk-surface-hover: #f9fafb;
+  --mk-text: #141a21;
+  --mk-text-secondary: #4a5562;
+  --mk-line: #dfe3e8;              /* hairlines and tile edges: decoration only */
+  --mk-control-line: #6b7480;      /* outline button border, 4.7:1 */
+  --mk-primary: #1d5bb8;
+  --mk-primary-hover: #174a99;
+  --mk-primary-active: #133e82;
+  --mk-on-primary: #ffffff;
+  --mk-link: #1d5bb8;
+  --mk-focus: #141a21;
+  --mk-chip-bg: #fcefd0;
+  --mk-chip-text: #7a4b00;
+  --mk-header: rgb(255 255 255 / 0.92);
+  --mk-shadow-1: 0 1px 2px rgb(20 26 33 / 0.06), 0 2px 8px rgb(20 26 33 / 0.06);
+  --mk-shadow-2: 0 2px 4px rgb(20 26 33 / 0.08), 0 10px 28px rgb(20 26 33 / 0.14);
+  --mk-shadow-shot: 0 2px 6px rgb(20 26 33 / 0.08), 0 28px 56px -16px rgb(20 26 33 / 0.28);
+  --mk-radius: 8px;                /* tiles, frames */
+  --mk-radius-control: 4px;        /* buttons, inputs */
+  --mk-font: 'Segoe UI Variable Text', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Schibsted Grotesk Variable', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mk-font-display: 'Segoe UI Variable Display', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Schibsted Grotesk Variable', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mk-gutter: clamp(1rem, 0.4rem + 2.6vw, 3rem);
+  --mk-width: 80rem;
+  --mk-band-pad: clamp(3.5rem, 2rem + 5vw, 6.5rem);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
+
+  --mk-bg: #0f141a;
+  --mk-band: #161c23;
+  --mk-tint: #1a2a40;
+  --mk-surface: #1b222a;
+  --mk-surface-hover: #212932;
+  --mk-text: #e7ecf2;
+  --mk-text-secondary: #a9b3bf;
+  --mk-line: #2b333d;
+  --mk-control-line: #7d8794;
+  --mk-primary: #8cb8ff;
+  --mk-primary-hover: #a8c9ff;
+  --mk-primary-active: #c2d9ff;
+  --mk-on-primary: #0b1015;
+  --mk-link: #8cb8ff;
+  --mk-focus: #ffffff;
+  --mk-chip-bg: #2a2414;
+  --mk-chip-text: #ffd890;
+  --mk-header: rgb(15 20 26 / 0.92);
+  --mk-shadow-1: 0 0 0 1px rgb(255 255 255 / 0.04), 0 2px 8px rgb(0 0 0 / 0.3);
+  --mk-shadow-2: 0 0 0 1px rgb(255 255 255 / 0.06), 0 12px 32px rgb(0 0 0 / 0.5);
+  --mk-shadow-shot: 0 0 0 1px rgb(255 255 255 / 0.06), 0 28px 56px -16px rgb(0 0 0 / 0.7);
 
   --color-bg: #0d1218;
   --wash:

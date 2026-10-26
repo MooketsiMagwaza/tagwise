@@ -11,12 +11,14 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>Tagwise</title>
     <!-- Apply the stored look before first paint so a dark-theme visitor never
-         sees a light flash. Mirrors src/theme/appearance.ts (applyAppearance). -->
+         sees a light flash. Mirrors src/theme/appearance.ts (applyAppearance):
+         the public page at / is light unless the visitor chose dark. -->
     <script>
       (function () {
         try {
           var a = JSON.parse(localStorage.getItem('tagwise.appearance') || 'null') || {};
-          var dark = a.theme === 'dark' || (a.theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var page = location.pathname === '/';
+          var dark = a.theme === 'dark' || (a.theme !== 'light' && !page && window.matchMedia('(prefers-color-scheme: dark)').matches);
           var r = document.documentElement;
           r.dataset.theme = dark ? 'dark' : 'light';
           r.dataset.density = a.density || 'comfortable';

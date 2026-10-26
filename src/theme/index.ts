@@ -12,6 +12,7 @@ export {
   isDark,
   loadAppearance,
   setAppearance,
+  setLightUnlessChosen,
   useAppearance,
   useIsDark,
   type Appearance,
