@@ -238,7 +238,8 @@ th.right .sortButton {
 }
 @media (max-width: 719px) {
   .bulk {
-    bottom: calc(var(--tabbar-height) + var(--space-6));
+    /* Above the tab bar and the floating theme button. */
+    bottom: calc(var(--tabbar-height) + var(--space-3) + var(--toggle-size) + var(--space-6));
   }
 }
 

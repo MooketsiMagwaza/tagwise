@@ -130,6 +130,7 @@
   --gutter: 1rem;
   --nav-height: 3.5rem;
   --tabbar-height: 4rem;
+  --toggle-size: 2.75rem;  /* the floating theme button: 44 px, a full touch target */
   --sidebar-width: 15.5rem;
   --row-pad: 0.625rem;  /* table cell vertical padding; compact density halves it */
 

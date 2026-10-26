@@ -209,7 +209,8 @@
 .content {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: var(--space-6) var(--space-6) var(--space-12);
+  /* Bottom room for the floating theme button in the corner. */
+  padding: var(--space-6) var(--space-6) calc(var(--toggle-size) + var(--space-4) + var(--space-8));
   outline: 0;
 }
 .phoneOnly,
@@ -268,6 +269,11 @@
 @media (max-width: 719px) {
   .phoneOnly {
     display: none;
+  }
+  /* The tab bar and, above it, the theme button: the last line of content
+     can always scroll clear of both. */
+  .content {
+    padding-bottom: calc(var(--tabbar-height) + var(--space-3) + var(--toggle-size) + var(--space-3) + env(safe-area-inset-bottom) + var(--space-8));
   }
   .phoneBrand {
     display: inline-flex;
