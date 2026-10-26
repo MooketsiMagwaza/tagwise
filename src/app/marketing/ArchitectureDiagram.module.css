@@ -120,6 +120,10 @@
   border-top: 2px solid var(--mk-text-secondary);
 }
 .keyDashed {
-  margin-left: var(--space-3);
   border-top: 2px dashed var(--mk-primary);
+}
+.key {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }

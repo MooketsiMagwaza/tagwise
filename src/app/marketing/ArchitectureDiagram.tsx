@@ -178,8 +178,12 @@ export function ArchitectureDiagram() {
       <Wide />
       <Tall />
       <p className={styles.legend}>
-        <span className={styles.keySolid} aria-hidden="true" /> in place in the code and the Compose files
-        <span className={styles.keyDashed} aria-hidden="true" /> the app does not call the services yet
+        <span className={styles.key}>
+          <span className={styles.keySolid} aria-hidden="true" /> in place in the code and the Compose files
+        </span>
+        <span className={styles.key}>
+          <span className={styles.keyDashed} aria-hidden="true" /> the app does not call the services yet
+        </span>
       </p>
     </div>
   );

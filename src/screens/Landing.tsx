@@ -5,7 +5,7 @@
 // (README, docs/WORK_ORDERS.md); every picture is a real capture of the
 // sample workspace from public/screens.
 
-import { useEffect, useLayoutEffect, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import {
   Building2,
   ChevronDown,
@@ -172,13 +172,24 @@ function SectionNav() {
     });
     return () => io.disconnect();
   }, []);
+  // On a phone the links scroll sideways: keep the current one in view.
+  const links = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const nav = links.current;
+    const link = nav?.querySelector<HTMLElement>('[aria-current]');
+    if (!nav || !link) return;
+    const n = nav.getBoundingClientRect();
+    const l = link.getBoundingClientRect();
+    if (l.left < n.left) nav.scrollLeft -= n.left - l.left + 16;
+    else if (l.right > n.right) nav.scrollLeft += l.right - n.right + 16;
+  }, [current]);
   return (
     <div className={styles.secnav}>
       <div className={styles.secnavInner}>
         <span className={styles.secnavName} aria-hidden="true">
           Tagwise
         </span>
-        <nav className={styles.secnavLinks} aria-label="On this page">
+        <nav ref={links} className={styles.secnavLinks} aria-label="On this page">
           {SECTIONS.map((s) => (
             <a key={s.id} href={`#${s.id}`} aria-current={current === s.id ? 'location' : undefined}>
               {s.label}
