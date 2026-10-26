@@ -2,10 +2,12 @@
 
 Tagwise is a shared register for an organisation's assets and stock: QR
 labels, browser scanning, Excel and CSV import, stock-takes run together,
-and sites on a map. Today it is a browser-only prototype (React 18,
-TypeScript, Vite) with a seeded, invented sample workspace behind a data
-interface (`src/data/repository.ts`); the Rust API comes later. Owner:
-Mooketsi Vincent Magwaza. All rights reserved; there is no licence file.
+and sites on a map. The app (React 18, TypeScript, Vite) runs on a seeded,
+invented sample workspace in the browser behind a data interface
+(`src/data/repository.ts`). The Rust services in `backend/` (identity,
+register, notifications, media, ops) are built, tested and run in Docker, but
+the app does not call them yet (TW-21). Owner: Mooketsi Vincent Magwaza. All
+rights reserved; there is no licence file. Start with `docs/HANDOFF.md`.
 
 ## Commands
 
@@ -52,7 +54,10 @@ what it waits for). Every new instruction from the owner gets an entry.
 
 ## Boundaries
 
-- The repository is private. The owner decides when it goes public.
+- The repository has been public since 25 October 2026. Do not commit
+  anything that should not be public.
+- The app is Apple-like and flat (no gradients, no glass washes); the public
+  page at `/` is a product page. See `docs/DESIGN.md`.
 - Never read or commit `.env` files.
 - The name gate (`npm run check:names`) fails if another of the owner's
   product names appears in tracked files; `PROVENANCE.md` and the
