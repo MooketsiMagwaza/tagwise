@@ -9,7 +9,7 @@
   text-decoration: none;
 }
 .wordmark {
-  font-family: var(--font-display);
+  font-family: var(--font-brand);
   font-size: 1.1875rem;
   font-weight: var(--weight-semibold);
   letter-spacing: -0.02em;
