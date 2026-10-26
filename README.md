@@ -9,29 +9,41 @@ today.
 **Status: prototype.** The app runs entirely in the browser with a
 fictional sample organisation: no sign-in and no real data yet. Behind it
 sits a backend (five Rust services, a Docker stack with a gateway,
-observability and a documentation site) that is tested in CI but has never
-been run as a whole and is not yet connected to the app. What is real and
-what is scaffold is listed below, in [ARCHITECTURE.md](ARCHITECTURE.md) and
-in [docs/WORK_ORDERS.md](docs/WORK_ORDERS.md).
+observability and a documentation site) that is tested in CI and starts as
+a Docker development stack, but is not yet connected to the app. What is
+real and what is scaffold is listed below, in
+[ARCHITECTURE.md](ARCHITECTURE.md) and in
+[docs/WORK_ORDERS.md](docs/WORK_ORDERS.md).
 
-| Light | Dark |
-| --- | --- |
-| ![The landing page](public/screens/landing-light.jpg) | ![The landing page, dark](public/screens/landing-dark.jpg) |
-| ![Home: what needs attention, a stock-take in progress, recent activity](public/screens/dashboard-light.jpg) | ![Home, dark](public/screens/dashboard-dark.jpg) |
-| ![The register with saved views, filters and columns](public/screens/register-light.jpg) | ![The register, dark](public/screens/register-dark.jpg) |
-| ![An asset with its details, custody, QR label and history](public/screens/asset-light.jpg) | ![An asset, dark](public/screens/asset-dark.jpg) |
-| ![The import check, with problems marked cell by cell](public/screens/import-light.jpg) | ![The import check, dark](public/screens/import-dark.jpg) |
-| ![A live stock-take board](public/screens/count-light.jpg) | ![A stock-take board, dark](public/screens/count-dark.jpg) |
-| ![Six sites on a map](public/screens/sites-light.jpg) | ![Sites, dark](public/screens/sites-dark.jpg) |
+## Screens
+
+Every major surface, light and dark, captured from the running app with
+`npm run screenshots` (desktop 1440 × 900; phone 390 × 844 at 2x).
+
+| | Light | Dark |
+| --- | --- | --- |
+| The public page | ![The public page: the headline, the Open the demo button and a large capture of the home screen in a window frame](public/screens/landing-light.webp) | ![The public page in the dark theme: the headline, the demo button and the home screen capture](public/screens/landing-dark.webp) |
+| Home | ![Home: items overdue and due back, low stock, a stock-take in progress, assets by site and recent activity](public/screens/dashboard-light.webp) | ![Home in the dark theme, with the floating theme button in the bottom right corner](public/screens/dashboard-dark.webp) |
+| The register | ![The register: saved views as a segmented control, search, filter and column buttons, and a table of 126 assets](public/screens/register-light.webp) | ![The register in the dark theme, with status pills and custodians in the table](public/screens/register-dark.webp) |
+| An asset and its QR label | ![An asset page: details, who has it and that it is overdue, its QR label with a print button, and comments](public/screens/asset-light.webp) | ![An asset page in the dark theme; the QR label stays black on white so it scans](public/screens/asset-dark.webp) |
+| Scan | ![Scan: a scanned asset with check-in, move and count actions, and sample codes to try](public/screens/scan-light.webp) | ![Scan in the dark theme, after scanning a laptop's tag](public/screens/scan-dark.webp) |
+| Labels | ![Labels: seven assets chosen and their QR labels laid out three across on an A4 sheet](public/screens/labels-light.webp) | ![Labels in the dark theme; the A4 sheet stays white](public/screens/labels-dark.webp) |
+| The import check | ![The import check: problem rows marked cell by cell, with counts of rows ready, rows with errors and rows already in the register](public/screens/import-light.webp) | ![The import check in the dark theme, showing the Problems view](public/screens/import-dark.webp) |
+| A stock-take | ![A stock-take board: 14 of 22 found, progress by room, a live feed of scans and the items still to find](public/screens/count-light.webp) | ![The stock-take board in the dark theme](public/screens/count-dark.webp) |
+| Sites | ![Six sample sites on a map of Botswana, with a list of each site's assets, items out and stock](public/screens/sites-light.webp) | ![The sites map in the dark theme, with a dark basemap](public/screens/sites-dark.webp) |
+| People and roles | ![People and roles: the sample member you act as, and the members with their roles and last activity](public/screens/people-light.webp) | ![People and roles in the dark theme, with the settings sections as a segmented control](public/screens/people-dark.webp) |
 
 On a phone:
 
-| Home | Register | Scan |
-| --- | --- | --- |
-| ![Home on a phone](public/screens/phone-home-light.jpg) | ![The register as cards on a phone](public/screens/phone-register-light.jpg) | ![Scan result on a phone](public/screens/phone-scan-light.jpg) |
+| The public page | Home | Register | Scan |
+| --- | --- | --- | --- |
+| ![The public page on a phone: the headline, the demo button and the home screen in a phone frame](public/screens/phone-landing-light.webp) | ![Home on a phone, with the floating tab bar and the theme button just above it on the left](public/screens/phone-home-light.webp) | ![The register on a phone: saved views as a segmented control and assets as cards](public/screens/phone-register-light.webp) | ![A scan result on a phone: the asset with its actions](public/screens/phone-scan-light.webp) |
+| ![The public page on a phone, dark](public/screens/phone-landing-dark.webp) | ![Home on a phone, dark](public/screens/phone-home-dark.webp) | ![The register on a phone, dark](public/screens/phone-register-dark.webp) | ![A scan result on a phone, dark](public/screens/phone-scan-dark.webp) |
 
 The screenshots are of the sample workspace: the trust, the people and every
-figure are invented, and the app says so on screen.
+figure are invented, and the app says so on screen. Each capture is saved as
+WebP (used here and on the public page) and as JPEG (mirrored by the docs
+site); every file is under 150 KB.
 
 ## What is real, and what is demo
 
@@ -60,7 +72,7 @@ figure are invented, and the app says so on screen.
 | Register rules: stock never below zero under concurrent issues, idempotent adjustments, version conflicts on edits, workspace isolation, scan classification | **Tested**: 5 tests against PostgreSQL pass in CI |
 | API reference | **Real**: generated from the services' own OpenAPI documents (53 paths, 67 operations); a CI guard keeps the committed snapshot in step with the routes |
 | Documentation site (`docs-site/`) | **Builds** in CI; not deployed |
-| Docker development stack and gateway (`docker/`) | **Configuration**: renders and passes the compose guard in CI. Only its PostgreSQL and Redis have been started; the service images have not been built |
+| Docker development stack and gateway (`docker/`) | **Runs**: built and started with `docker compose -f docker/compose.dev.yml up -d --build` on 25 Oct 2026. On 26 Oct 2026 `docker ps` showed all ten containers healthy (PostgreSQL, Redis, the five services, the docs site, the web container and the gateway), the five migration jobs had exited with 0, and the gateway's `/gw-health` answered 200. A development stack only; the app does not call it yet |
 | Observability: Prometheus, Grafana, OpenTelemetry collector, Tempo | **Configuration**: renders; never started; no alert rules |
 | Identity and register running together | **Run once, outside containers**: on 9 Oct 2026 both ran from their binaries against the compose file's PostgreSQL and Redis, and `scripts/smoke-identity-register.mjs` passed 14 of 14 checks: sign-in by one-time code, register accepting identity's token, another account getting 404, and a signed-out token refused by register at once |
 | Notifications, media and ops running; sending email, SMS and push | **Scaffold**: never run; sending needs provider keys |
