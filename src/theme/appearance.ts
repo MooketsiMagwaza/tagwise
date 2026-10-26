@@ -59,7 +59,7 @@ export function applyAppearance(a: Appearance) {
   root.dataset.theme = dark ? 'dark' : 'light';
   root.dataset.density = a.density;
   root.dataset.motion = a.motion;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0d1218' : '#f3f5f7');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#000000' : '#f2f2f7');
   themeListeners.forEach((l) => l());
 }
 
