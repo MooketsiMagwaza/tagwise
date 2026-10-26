@@ -92,7 +92,8 @@ function Wide() {
       <Box x={20} y={420} w={420} h={72} kind="store" title="PostgreSQL 15" sub={['a database per service, each with its own migrations']} />
       <Box x={470} y={420} w={210} h={72} kind="store" title="Redis 7" sub={['sign-out list, rate limits']} />
 
-      <path d="M680 302 H718" className={styles.edge} markerEnd={a} />
+      {/* From the bus every service shares, so it reads "all services report". */}
+      <path d="M620 380 H700 V302 H718" className={styles.edge} markerEnd={a} />
       <g className={styles.group}>
         <rect x={720} y={250} width={260} height={290} rx={8} />
         <text x={736} y={276} className={styles.groupTitle}>
