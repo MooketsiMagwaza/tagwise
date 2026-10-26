@@ -39,7 +39,7 @@
   width: 100%;
 }
 
-/* The one primary action on a screen: ink. */
+/* The one primary action on a screen: filled with the accent. */
 .primary {
   background: var(--color-accent);
   color: var(--color-on-accent);
@@ -47,20 +47,21 @@
 .primary:hover:not(:disabled) { background: var(--color-accent-hover); }
 .primary:active:not(:disabled) { background: var(--color-accent-active); }
 
+/* Everything else is a flat tinted button: accent text on an accent tint. */
 .secondary {
-  background: var(--color-surface-solid);
-  color: var(--color-text);
-  box-shadow: var(--shadow-raised);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
 }
 .secondary:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--color-surface-solid) 90%, var(--color-text));
+  background: color-mix(in srgb, var(--color-accent-text) 13%, transparent);
 }
 
+/* A plain button: just the accent-coloured label. */
 .ghost {
   background: transparent;
-  color: var(--color-text);
+  color: var(--color-accent-text);
 }
-.ghost:hover:not(:disabled) { background: var(--color-fill); }
+.ghost:hover:not(:disabled) { background: var(--color-row-hover); }
 
 /* Destructive actions: only ever the confirm step of a confirmation. */
 .danger {
@@ -100,6 +101,7 @@
 .icon-plain { background: none; color: var(--color-text-secondary); }
 .icon-plain:hover:not(:disabled) { background: var(--color-fill); color: var(--color-text); }
 
+/* Over a camera view or a map: the plain sheet material. */
 .icon-overlay {
   background: var(--color-glass-strong);
   color: var(--color-text);

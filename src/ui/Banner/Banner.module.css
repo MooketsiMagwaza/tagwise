@@ -4,7 +4,9 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--tone) 11%, var(--color-surface-solid));
+  /* A plain grouped cell: no tint behind it; the icon carries the tone. */
+  background: var(--color-surface);
+  box-shadow: var(--shadow-1);
   color: var(--color-text);
   font-size: var(--text-small);
   line-height: var(--leading-small);
@@ -15,7 +17,4 @@
 }
 .info { --tone: var(--color-accent-text); }
 .warning { --tone: var(--color-warning); }
-.brand {
-  --tone: var(--color-brand-ink);
-  background: var(--color-brand-soft);
-}
+.brand { --tone: var(--color-text-secondary); }

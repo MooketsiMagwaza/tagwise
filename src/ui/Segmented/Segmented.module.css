@@ -51,7 +51,7 @@
   outline-offset: -2px;
 }
 .selected {
-  background: var(--color-surface-solid);
+  background: var(--color-segment);
   color: var(--color-text);
   box-shadow: var(--shadow-raised);
 }
