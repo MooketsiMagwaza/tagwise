@@ -22,6 +22,7 @@ import { setPresencePath, useLookups, useMe, usePresence, useQuery } from '../da
 import { ROLE_LABEL } from '../data/permissions';
 import { setAppearance, useAppearance, useIsDark } from '../theme';
 import { Logo, LogoMark, PresenceStack } from './bits';
+import { ThemeToggle } from './ThemeToggle';
 import styles from './Shell.module.css';
 
 interface NavItem {
@@ -166,8 +167,9 @@ function useCommands(): CommandGroup[] {
   );
 }
 
-/** The signed-in frame: sidebar on wide screens, a floating tab bar and a
- *  drawer on phones, a glass top bar with search and presence. */
+/** The signed-in frame: a floating glass sidebar on wide screens, a
+ *  floating tab bar and a drawer on phones, a glass top bar with search and
+ *  presence, and the theme switch as a floating button in a bottom corner. */
 export function Shell({ title, children }: { title: string; children: ReactNode }) {
   const { path } = useLocation();
   const [drawer, setDrawer] = useState(false);
@@ -175,8 +177,6 @@ export function Shell({ title, children }: { title: string; children: ReactNode 
   const commands = useCommands();
   const lookups = useLookups();
   const peers = usePresence(path);
-  const dark = useIsDark();
-  const appearance = useAppearance();
 
   useEffect(() => setPresencePath(path), [path]);
   useEffect(() => setDrawer(false), [path]);
@@ -237,13 +237,6 @@ export function Shell({ title, children }: { title: string; children: ReactNode 
             <span className={styles.presenceSlot}>
               <PresenceStack peers={peers} people={lookups.people} />
             </span>
-            <IconButton
-              label={dark ? 'Use the light theme' : 'Use the dark theme'}
-              variant="plain"
-              onClick={() => setAppearance({ ...appearance, theme: dark ? 'light' : 'dark' })}
-            >
-              {dark ? <Sun size={18} /> : <Moon size={18} />}
-            </IconButton>
             <Link href="/app/scan" className={styles.scanButton}>
               <ScanLine size={16} aria-hidden="true" />
               <span>Scan</span>
@@ -256,6 +249,7 @@ export function Shell({ title, children }: { title: string; children: ReactNode 
       </div>
 
       <TabBar path={path} onMore={() => setDrawer(true)} />
+      <ThemeToggle />
       {palette && <CommandPalette groups={commands} placeholder="Search assets by tag or name, or jump to a page" onClose={() => setPalette(false)} />}
     </div>
   );

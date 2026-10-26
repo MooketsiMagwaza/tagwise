@@ -1,66 +1,90 @@
 /* Tagwise design tokens: the one place colour, type, shape, space and motion
    are decided. Components read these names and never hard-code a value.
 
-   The look is "quiet glass for tables": a cool slate-white canvas with two
-   faint washes (amber top-left, slate blue bottom-right), translucent white
-   surfaces with a white inner edge and a soft slate shadow, one primary
-   action per screen in ink, and tag amber used sparingly as the brand spot
-   (the logo, the scan frame, label edges). Tables stay flat and legible:
-   hairlines, tabular figures, no zebra stripes.
+   The app looks like Apple's own software, flat and plain: the grouped
+   background (#f2f2f7 by day, black at night), opaque cards and grouped
+   lists with hairline separators, one blue accent for actions, links and
+   selection, system type, and nothing decorative. Tag amber appears only in
+   the logo, on printed labels and in the scan frame. Tables stay flat and
+   legible: hairlines, tabular figures, no zebra stripes.
 
    Rules (see docs/DESIGN.md):
-   - The only gradients are the two canvas washes. Never on buttons, text or icons.
-   - Blur only on things that float over content (sidebar on phones, top bar,
-     dialogs, popovers). In-flow cards are translucent but not blurred.
-   - Anything that sits over text uses --color-glass or --color-surface-solid.
+   - No gradients anywhere: no washes, no glows, no tinted backgrounds
+     behind cards.
+   - No glass on cards. Translucency with a plain blur only where Apple uses
+     a material: the top bar, the phone tab bar, sheets and popovers (and
+     the floating theme button, which sits over content).
+   - Cards are opaque with a hairline edge; shadows only lift things that
+     float (sheets, menus, the tab bar).
 
-   Contrast (WCAG AA, measured with the translucent surface composited over
-   the canvas): text 16:1 light / 14:1 dark, secondary 6.9 / 7.9, tertiary
-   4.6 / 5.3, control borders 3.0 / 4.6, link blue 5.9 / 8.3, status tones
-   5.4 to 6.4 light and 7.6 to 10.2 dark, white on the ink action 17.5. */
+   Contrast (WCAG 2.x, computed by script on 26 Oct 2026, translucent
+   colours composited over what they sit on):
+     day    text 15.25:1 on the background, 17.01 on cards; secondary 6.75 /
+            7.54; tertiary 4.69 / 5.23; accent #005fbf as text 5.55 / 6.20,
+            on the tinted button fill 4.76 (over the background) and 5.25
+            (over a card); white on the accent button 6.20; control borders
+            3.62; status tones 5.99 to 6.57; bar labels 7.10, the selected
+            tab 5.24.
+     night  text 19.29 on black, 15.63 on cards; secondary 9.50 / 7.69;
+            tertiary 5.93 on cards, 4.85 on sheets; accent #4da3ff as text
+            8.00 / 6.48, on the tinted fill 4.82 to 6.48; white on the accent
+            button #0071e3 4.70; control borders 5.22; status tones 7.71 to
+            10.35; bar labels 7.78, the selected tab 6.56.
+
+   The public page (--mk-*, below) has its own palette: white and light-grey
+   bands, near-black text and one blue for the primary action, the same
+   #1d5bb8 the app uses for links. Computed with the WCAG 2.x formula by a
+   script on 26 Oct 2026 (not estimated):
+     light  white on the blue button 6.48:1 (hover #174a99 8.48, pressed
+            #133e82 10.30); blue link on white 6.48, on the grey band 5.99,
+            on the blue tint 5.65; text 17.51 on white, 16.19 on the band;
+            secondary text 7.59 / 7.02 / 6.62 (white, band, tint); outline
+            button border 4.74 / 4.38; the button itself against white 6.48;
+            focus ring 17.51; "Demo data" chip 6.49.
+     dark   dark text on the light-blue button 9.48:1 (hover 11.34, pressed
+            13.34); link on the page 9.17, band 8.51, tiles 7.96; text 15.57 /
+            14.44 / 13.51; secondary 8.71 / 8.07 / 7.55; outline border 5.08 /
+            4.71; the button against the page 9.17; focus ring 18.50; chip
+            11.37. Every pair passes AA (4.5:1 text, 3:1 non-text). */
 
 :root,
 [data-theme='light'] {
   color-scheme: light;
 
-  /* ── canvas ─────────────────────────────────────────────────────────── */
-  --color-bg: #f3f5f7;
-  --wash:
-    radial-gradient(90% 55% at 0% 0%, rgb(252 236 196 / 0.75) 0%, rgb(252 236 196 / 0) 62%),
-    radial-gradient(80% 60% at 100% 100%, rgb(214 228 246 / 0.9) 0%, rgb(214 228 246 / 0) 70%),
-    linear-gradient(180deg, #f7f8fa 0%, #f1f4f7 100%);
+  /* ── background: the grouped background, flat ───────────────────────── */
+  --color-bg: #f2f2f7;
 
   /* ── surfaces ───────────────────────────────────────────────────────── */
-  --color-surface: rgb(255 255 255 / 0.72);      /* in-flow cards, table panels */
-  --color-surface-solid: #ffffff;                /* menus, dialogs, inputs */
-  --color-fill: rgb(30 45 65 / 0.06);            /* recessed controls, chips */
-  --color-fill-hover: rgb(30 45 65 / 0.1);
-  --color-row-hover: rgb(30 45 65 / 0.035);
-  --color-glass: rgb(250 251 252 / 0.8);         /* floating chrome */
-  --color-glass-strong: rgb(255 255 255 / 0.94); /* popovers, dialogs */
-  --blur-glass: saturate(160%) blur(18px);
-  --color-scrim: rgb(16 24 34 / 0.34);
-  --color-separator: rgb(20 30 45 / 0.1);
-  --color-border: #838d9b;                       /* control borders, 3:1 */
-  --color-inverse: #141a21;
-  --color-on-inverse: #f3f5f7;
+  --color-surface: #ffffff;                       /* cards, grouped lists, table panels */
+  --color-surface-solid: #ffffff;                 /* menus, inputs */
+  --color-fill: rgb(118 118 128 / 0.12);          /* recessed controls, chips, selection */
+  --color-fill-hover: rgb(118 118 128 / 0.2);
+  --color-row-hover: rgb(118 118 128 / 0.06);
+  --color-glass: rgb(249 249 249 / 0.88);         /* bar material: top bar, tab bar */
+  --color-glass-strong: rgb(255 255 255 / 0.96);  /* sheet material: dialogs, popovers */
+  --blur-glass: saturate(180%) blur(20px);
+  --color-scrim: rgb(0 0 0 / 0.3);
+  --color-separator: rgb(60 60 67 / 0.2);         /* hairlines */
+  --color-border: #86868b;                        /* control borders, 3.6:1 */
+  --color-inverse: #1c1c1e;
+  --color-on-inverse: #f5f5f7;
 
   /* ── text ───────────────────────────────────────────────────────────── */
-  --color-text: #141a21;
-  --color-text-secondary: #4a5562;
-  --color-text-tertiary: #636e7d;
+  --color-text: #1c1c1e;
+  --color-text-secondary: #545458;
+  --color-text-tertiary: #6c6c70;
 
-  /* ── action: the one primary thing is ink; blue is for links and selection ── */
-  --color-accent: #141a21;
-  --color-accent-hover: #2a333e;
-  --color-accent-active: #39434f;
+  /* ── accent: one blue for actions, links, selection and focus ──────── */
+  --color-accent: #005fbf;
+  --color-accent-hover: #004f9f;
+  --color-accent-active: #00427f;
   --color-on-accent: #ffffff;
-  --color-accent-text: #1d5bb8;
-  --color-accent-soft: #e2ebfa;
-  --color-focus: #1d5bb8;
+  --color-accent-text: #005fbf;
+  --color-accent-soft: rgb(0 113 227 / 0.12);     /* tinted buttons and selected rows */
+  --color-focus: #005fbf;
 
-  /* ── brand: tag amber ───────────────────────────────────────────────── */
-  --color-brand: #f2a516;       /* decoration only: logo, scan frame, label edge */
+  /* ── brand: tag amber, only in the logo, on labels and the scan frame ─ */
+  --color-brand: #f2a516;
   --color-brand-ink: #7a4b00;   /* text on --color-brand-soft */
   --color-brand-soft: #fcefd0;
 
@@ -83,12 +107,14 @@
   --color-data-5: #b42356;
   --color-data-6: #5b6b00;
 
-  /* ── type: Schibsted Grotesk for titles, the system face for reading ── */
-  --font-display: 'Schibsted Grotesk Variable', 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* ── type: the system face on Apple devices (SF Pro), the bundled
+        Schibsted Grotesk everywhere else; the wordmark is always Schibsted ── */
+  --font-brand: 'Schibsted Grotesk Variable', 'Schibsted Grotesk', system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Schibsted Grotesk Variable', 'Schibsted Grotesk', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Schibsted Grotesk Variable', 'Schibsted Grotesk', system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
   --text-display: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
-  --text-title: 1.625rem;
+  --text-title: 2rem;            /* large titles, as on iOS */
   --text-headline: 1.1875rem;
   --text-body: 1rem;
   --text-small: 0.875rem;
@@ -102,14 +128,15 @@
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
+  --weight-bold: 700;
   --tracking-display: -0.025em;
-  --tracking-title: -0.015em;
+  --tracking-title: -0.02em;
   --tracking-headline: -0.005em;
 
   /* ── shape ──────────────────────────────────────────────────────────── */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 18px;
+  --radius-lg: 14px;
   --radius-xl: 24px;
   --radius-pill: 999px;
 
@@ -128,54 +155,104 @@
   --gutter: 1rem;
   --nav-height: 3.5rem;
   --tabbar-height: 4rem;
+  --toggle-size: 2.75rem;  /* the floating theme button: 44 px, a full touch target */
   --sidebar-width: 15.5rem;
   --row-pad: 0.625rem;  /* table cell vertical padding; compact density halves it */
 
-  /* ── elevation: a white inner edge and a soft slate shadow ──────────── */
-  --shadow-1: inset 0 0 0 1px rgb(255 255 255 / 0.85), 0 0 0 1px rgb(20 30 45 / 0.06), 0 4px 18px rgb(40 60 90 / 0.06);
-  --shadow-2: inset 0 0 0 1px rgb(255 255 255 / 0.9), 0 0 0 1px rgb(20 30 45 / 0.06), 0 14px 36px rgb(40 60 90 / 0.16);
+  /* ── elevation: a hairline for cards; real shadows only for floating things ── */
+  --shadow-1: 0 0 0 0.5px rgb(0 0 0 / 0.08);
+  --shadow-2: 0 0 0 0.5px rgb(0 0 0 / 0.08), 0 8px 28px rgb(0 0 0 / 0.12);
   --shadow-float: var(--shadow-2);
-  --shadow-raised: 0 1px 2px rgb(20 30 45 / 0.12), 0 0 0 1px rgb(20 30 45 / 0.04);
+  --shadow-raised: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 2px 6px rgb(0 0 0 / 0.12);  /* the selected segment */
+  --color-segment: #ffffff;                       /* the selected segment's fill */
 
   /* ── motion ─────────────────────────────────────────────────────────── */
   --ease: cubic-bezier(0.2, 0, 0, 1);
   --duration-fast: 150ms;
   --duration: 220ms;
+
+  /* ── public page (src/screens/Landing): its own flat, banded palette ── */
+  --mk-bg: #ffffff;
+  --mk-band: #f5f6f8;
+  --mk-tint: #e9f0fb;
+  --mk-surface: #ffffff;
+  --mk-surface-hover: #f9fafb;
+  --mk-text: #141a21;
+  --mk-text-secondary: #4a5562;
+  --mk-line: #dfe3e8;              /* hairlines and tile edges: decoration only */
+  --mk-control-line: #6b7480;      /* outline button border, 4.7:1 */
+  --mk-primary: #1d5bb8;
+  --mk-primary-hover: #174a99;
+  --mk-primary-active: #133e82;
+  --mk-on-primary: #ffffff;
+  --mk-link: #1d5bb8;
+  --mk-focus: #141a21;
+  --mk-chip-bg: #fcefd0;
+  --mk-chip-text: #7a4b00;
+  --mk-header: rgb(255 255 255 / 0.92);
+  --mk-shadow-1: 0 1px 2px rgb(20 26 33 / 0.06), 0 2px 8px rgb(20 26 33 / 0.06);
+  --mk-shadow-2: 0 2px 4px rgb(20 26 33 / 0.08), 0 10px 28px rgb(20 26 33 / 0.14);
+  --mk-shadow-shot: 0 2px 6px rgb(20 26 33 / 0.08), 0 28px 56px -16px rgb(20 26 33 / 0.28);
+  --mk-radius: 8px;                /* tiles, frames */
+  --mk-radius-control: 4px;        /* buttons, inputs */
+  --mk-font: 'Segoe UI Variable Text', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Schibsted Grotesk Variable', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mk-font-display: 'Segoe UI Variable Display', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Schibsted Grotesk Variable', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mk-gutter: clamp(1rem, 0.4rem + 2.6vw, 3rem);
+  --mk-width: 80rem;
+  --mk-band-pad: clamp(3.5rem, 2rem + 5vw, 6.5rem);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --color-bg: #0d1218;
-  --wash:
-    radial-gradient(90% 55% at 0% 0%, rgb(242 165 22 / 0.1) 0%, rgb(242 165 22 / 0) 62%),
-    radial-gradient(80% 60% at 100% 100%, rgb(48 96 170 / 0.24) 0%, rgb(48 96 170 / 0) 70%),
-    linear-gradient(180deg, #0f151c 0%, #0b1015 100%);
+  --mk-bg: #0f141a;
+  --mk-band: #161c23;
+  --mk-tint: #1a2a40;
+  --mk-surface: #1b222a;
+  --mk-surface-hover: #212932;
+  --mk-text: #e7ecf2;
+  --mk-text-secondary: #a9b3bf;
+  --mk-line: #2b333d;
+  --mk-control-line: #7d8794;
+  --mk-primary: #8cb8ff;
+  --mk-primary-hover: #a8c9ff;
+  --mk-primary-active: #c2d9ff;
+  --mk-on-primary: #0b1015;
+  --mk-link: #8cb8ff;
+  --mk-focus: #ffffff;
+  --mk-chip-bg: #2a2414;
+  --mk-chip-text: #ffd890;
+  --mk-header: rgb(15 20 26 / 0.92);
+  --mk-shadow-1: 0 0 0 1px rgb(255 255 255 / 0.04), 0 2px 8px rgb(0 0 0 / 0.3);
+  --mk-shadow-2: 0 0 0 1px rgb(255 255 255 / 0.06), 0 12px 32px rgb(0 0 0 / 0.5);
+  --mk-shadow-shot: 0 0 0 1px rgb(255 255 255 / 0.06), 0 28px 56px -16px rgb(0 0 0 / 0.7);
 
-  --color-surface: rgb(255 255 255 / 0.05);
-  --color-surface-solid: #151c24;
-  --color-fill: rgb(255 255 255 / 0.07);
-  --color-fill-hover: rgb(255 255 255 / 0.11);
-  --color-row-hover: rgb(255 255 255 / 0.035);
-  --color-glass: rgb(17 23 31 / 0.8);
-  --color-glass-strong: rgb(21 28 36 / 0.95);
-  --color-scrim: rgb(0 0 0 / 0.6);
-  --color-separator: rgb(255 255 255 / 0.1);
-  --color-border: #7d8794;
-  --color-inverse: #e7ecf2;
-  --color-on-inverse: #0d1218;
+  --color-bg: #000000;
 
-  --color-text: #e7ecf2;
-  --color-text-secondary: #a9b3bf;
-  --color-text-tertiary: #8792a0;
+  --color-surface: #1c1c1e;
+  --color-surface-solid: #1c1c1e;
+  --color-fill: rgb(118 118 128 / 0.24);
+  --color-fill-hover: rgb(118 118 128 / 0.32);
+  --color-row-hover: rgb(255 255 255 / 0.04);
+  --color-glass: rgb(22 22 23 / 0.86);
+  --color-glass-strong: rgb(44 44 46 / 0.96);
+  --color-scrim: rgb(0 0 0 / 0.55);
+  --color-separator: rgb(84 84 88 / 0.6);
+  --color-border: #8e8e93;
+  --color-inverse: #f5f5f7;
+  --color-on-inverse: #1c1c1e;
 
-  --color-accent: #e7ecf2;
-  --color-accent-hover: #ffffff;
-  --color-accent-active: #d3dae3;
-  --color-on-accent: #0d1218;
-  --color-accent-text: #8cb8ff;
-  --color-accent-soft: rgb(140 184 255 / 0.16);
-  --color-focus: #8cb8ff;
+  --color-text: #f5f5f7;
+  --color-text-secondary: #aeaeb2;
+  --color-text-tertiary: #98989d;
+
+  --color-accent: #0071e3;
+  --color-accent-hover: #0062c4;
+  --color-accent-active: #00539f;
+  --color-on-accent: #ffffff;
+  --color-accent-text: #4da3ff;
+  --color-accent-soft: rgb(77 163 255 / 0.18);
+  --color-focus: #4da3ff;
 
   --color-brand: #f6b73c;
   --color-brand-ink: #ffd890;
@@ -198,9 +275,10 @@
   --color-data-5: #ff8fb5;
   --color-data-6: #c7d36a;
 
-  --shadow-1: inset 0 0 0 1px rgb(255 255 255 / 0.07), 0 6px 22px rgb(0 0 0 / 0.28);
-  --shadow-2: inset 0 0 0 1px rgb(255 255 255 / 0.1), 0 16px 40px rgb(0 0 0 / 0.5);
-  --shadow-raised: 0 1px 2px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
+  --shadow-1: none;
+  --shadow-2: 0 0 0 0.5px rgb(255 255 255 / 0.1), 0 8px 28px rgb(0 0 0 / 0.6);
+  --shadow-raised: 0 2px 6px rgb(0 0 0 / 0.35);
+  --color-segment: #636366;
 }
 
 /* Compact tables, chosen in Settings. */
@@ -212,13 +290,13 @@
    sits on busy content. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root,
-  [data-theme='light'] { --color-glass: rgb(250 251 252 / 0.97); --color-glass-strong: #ffffff; }
-  [data-theme='dark'] { --color-glass: rgb(17 23 31 / 0.97); --color-glass-strong: #151c24; }
+  [data-theme='light'] { --color-glass: rgb(249 249 249 / 0.98); --color-glass-strong: #ffffff; }
+  [data-theme='dark'] { --color-glass: rgb(22 22 23 / 0.98); --color-glass-strong: #2c2c2e; }
 }
 
 /* People who ask for less transparency get solid surfaces and no blur. */
 @media (prefers-reduced-transparency: reduce) {
   :root,
-  [data-theme='light'] { --color-surface: #ffffff; --color-glass: #ffffff; --color-glass-strong: #ffffff; --blur-glass: none; }
-  [data-theme='dark'] { --color-surface: #151c24; --color-glass: #151c24; --color-glass-strong: #151c24; --blur-glass: none; }
+  [data-theme='light'] { --color-glass: #f9f9f9; --color-glass-strong: #ffffff; --blur-glass: none; }
+  [data-theme='dark'] { --color-glass: #161617; --color-glass-strong: #2c2c2e; --blur-glass: none; }
 }

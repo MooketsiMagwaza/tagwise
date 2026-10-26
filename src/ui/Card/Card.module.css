@@ -1,5 +1,5 @@
-/* The in-flow surface: translucent white with a white inner edge and a soft
-   slate shadow. Not blurred (blur is for floating things only). */
+/* The in-flow surface: an opaque card on the grouped background with a
+   hairline edge, like an inset grouped list. No blur, no glow. */
 .card {
   min-width: 0;
   background: var(--color-surface);

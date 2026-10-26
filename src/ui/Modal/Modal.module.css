@@ -1,3 +1,6 @@
+/* Dialogs are sheets. On wide screens: a centred form sheet with large
+   corners. On phones: a bottom sheet, full width, rounded at the top, with
+   a grabber, rising from the bottom edge like the native one. */
 .scrim {
   position: fixed;
   inset: 0;
@@ -12,9 +15,11 @@
 }
 
 .panel {
+  position: relative;
   width: 100%;
   max-height: calc(100dvh - 2 * var(--space-4));
   overflow-y: auto;
+  overscroll-behavior: contain;
   border-radius: var(--radius-xl);
   background: var(--color-glass-strong);
   -webkit-backdrop-filter: var(--blur-glass);
@@ -40,6 +45,38 @@
   padding: var(--space-4) var(--space-6) var(--space-6);
 }
 
+@media (max-width: 719px) {
+  .scrim {
+    place-items: end stretch;
+    padding: var(--space-8) 0 0;
+  }
+  .panel {
+    max-width: none;
+    max-height: calc(100dvh - var(--space-8) - env(safe-area-inset-top));
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    animation: sheet var(--duration) var(--ease) both;
+  }
+  /* The grabber: a visual cue that this is a sheet over the page. */
+  .panel::before {
+    content: "";
+    position: sticky;
+    top: 0;
+    display: block;
+    width: 2.25rem;
+    height: 0.3125rem;
+    margin: var(--space-2) auto 0;
+    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-text-tertiary) 50%, transparent);
+  }
+  .header {
+    padding: var(--space-3) var(--space-5) 0;
+  }
+  .body {
+    padding: var(--space-4) var(--space-5) var(--space-6);
+  }
+}
+
 @keyframes fade {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -47,4 +84,8 @@
 @keyframes rise {
   from { opacity: 0; transform: translateY(8px) scale(0.985); }
   to { opacity: 1; transform: none; }
+}
+@keyframes sheet {
+  from { transform: translateY(100%); }
+  to { transform: none; }
 }

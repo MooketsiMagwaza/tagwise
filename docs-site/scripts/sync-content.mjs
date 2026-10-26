@@ -41,8 +41,9 @@ const repoRoot = path.resolve(here, '../..');
 const outRoot = path.resolve(here, '../content/docs');
 
 // Mirror the app's screenshots (public/screens/<name>-light.jpg and
-// <name>-dark.jpg) into this site, with a manifest of each pair's size so
-// pages can reserve space for them.
+// <name>-dark.jpg, plus the WebP copies the README links to) into this
+// site, with a manifest of each JPEG or PNG pair's size so pages can
+// reserve space for them.
 {
   const from = path.join(repoRoot, 'public/screens');
   const to = path.resolve(here, '../public/screens');
@@ -51,7 +52,7 @@ const outRoot = path.resolve(here, '../content/docs');
   const shots = [];
   if (fs.existsSync(from)) {
     for (const f of fs.readdirSync(from).sort()) {
-      if (!/\.(jpe?g|png)$/.test(f)) continue;
+      if (!/\.(jpe?g|png|webp)$/.test(f)) continue;
       fs.copyFileSync(path.join(from, f), path.join(to, f));
       const m = f.match(/^(.*)-light\.(jpe?g|png)$/);
       if (!m) continue;

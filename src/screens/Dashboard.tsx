@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, CalendarClock, ClipboardCheck, PackageMinus, Wrench } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CalendarClock, ClipboardCheck, Info, PackageMinus, Wrench } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Avatar, Banner, ButtonLink, Card, CardHeader, Text } from '../ui';
 import { Link } from '../lib/router';
@@ -60,7 +60,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.page}>
-      <Banner tone="brand">
+      <Banner tone="brand" icon={<Info size={16} aria-hidden="true" />}>
         Sample workspace: the trust, the people and every figure are invented. Changes stay in this browser.
       </Banner>
       <ScreenHeader
@@ -95,7 +95,7 @@ export default function Dashboard() {
               {dueSoon.length > 0 && (
                 <Attention
                   icon={<CalendarClock size={18} />}
-                  tone="brand"
+                  tone="warning"
                   title={`${count(dueSoon.length, 'item')} due back in the next three days`}
                   detail="Checked out to staff; a reminder is not sent in the prototype."
                   href="/app/assets?view=v-out"
@@ -153,7 +153,7 @@ export default function Dashboard() {
                 </ButtonLink>
               </div>
               <div className={styles.countBody}>
-                <Progress value={found.size} max={open.expected.length} label="Assets found" tone="brand" />
+                <Progress value={found.size} max={open.expected.length} label="Assets found" tone="accent" />
                 <div className={styles.countMeta}>
                   <Text variant="small">
                     <strong>{found.size}</strong> of {open.expected.length} found

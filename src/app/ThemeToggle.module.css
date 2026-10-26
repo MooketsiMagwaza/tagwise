@@ -1,0 +1,56 @@
+/* A small glass disc in a bottom corner. It floats over content, so it is
+   one of the few things allowed to blur what is behind it. Below dialogs,
+   drawers and the command palette (z-index 200 and up), above the page. */
+.toggle {
+  position: fixed;
+  right: calc(var(--space-4) + env(safe-area-inset-right));
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  z-index: 55;
+  display: grid;
+  place-items: center;
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-glass-strong);
+  -webkit-backdrop-filter: var(--blur-glass);
+  backdrop-filter: var(--blur-glass);
+  color: var(--color-text);
+  box-shadow: var(--shadow-2);
+  transition: opacity var(--duration-fast) var(--ease), transform var(--duration-fast) var(--ease),
+    background-color var(--duration-fast) var(--ease);
+}
+.toggle:hover {
+  background: var(--color-surface-solid);
+}
+.toggle:active {
+  transform: scale(0.94);
+}
+
+/* While someone types, the button steps aside. */
+.away {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+
+/* Phones: bottom left, just above the floating tab bar, so it never sits
+   on a tab. The content area keeps room for it (see Shell.module.css). */
+@media (max-width: 719px) {
+  .app {
+    right: auto;
+    left: calc(var(--space-3) + env(safe-area-inset-left));
+    bottom: calc(var(--space-3) + env(safe-area-inset-bottom) + var(--tabbar-height) + var(--space-3));
+  }
+}
+
+/* The public page has its own palette: a white disc with a hairline. */
+.page {
+  background: var(--mk-surface);
+  color: var(--mk-text);
+  box-shadow: var(--mk-shadow-2);
+}
+.page:hover {
+  background: var(--mk-surface-hover);
+}

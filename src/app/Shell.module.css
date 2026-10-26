@@ -17,14 +17,15 @@
 }
 
 /* ── sidebar (wide screens) ─────────────────────────────────────────── */
+/* A plain sidebar column, flush to the edge, divided from the content by
+   a hairline, like the sidebar in Apple's own apps. */
 .sidebar {
   position: fixed;
-  inset: var(--space-3) auto var(--space-3) var(--space-3);
+  inset: 0 auto 0 0;
   z-index: 50;
   width: var(--sidebar-width);
-  border-radius: var(--radius-xl);
   background: var(--color-surface);
-  box-shadow: var(--shadow-1);
+  border-right: 1px solid var(--color-separator);
   overflow-y: auto;
 }
 .sidebarInner {
@@ -54,18 +55,8 @@
   line-height: 1.3;
 }
 .wsNote {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  color: var(--color-brand-ink);
+  color: var(--color-text-secondary);
   font-size: var(--text-caption);
-}
-.wsNote::before {
-  content: "";
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: 50%;
-  background: var(--color-brand);
 }
 .navGroup {
   display: flex;
@@ -83,23 +74,21 @@
   gap: var(--space-3);
   min-height: 2.375rem;
   padding: 0 var(--space-3);
-  border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
   text-decoration: none;
-  font-weight: var(--weight-medium);
   transition: background-color var(--duration-fast) var(--ease), color var(--duration-fast) var(--ease);
 }
+.navLink svg {
+  color: var(--color-accent-text);
+}
 .navLink:hover {
-  background: var(--color-fill);
-  color: var(--color-text);
+  background: var(--color-row-hover);
 }
 .navLink[aria-current='page'] {
-  background: var(--color-surface-solid);
-  color: var(--color-text);
-  box-shadow: var(--shadow-raised);
-}
-.navLink[aria-current='page'] svg {
-  color: var(--color-brand-ink);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+  font-weight: var(--weight-semibold);
 }
 .navFoot {
   margin-top: auto;
@@ -137,7 +126,7 @@
 
 /* ── main column ────────────────────────────────────────────────────── */
 .main {
-  margin-left: calc(var(--sidebar-width) + var(--space-3));
+  margin-left: var(--sidebar-width);
   min-width: 0;
 }
 .topbar {
@@ -187,9 +176,8 @@
 .kbd {
   padding: 1px 6px;
   border-radius: 6px;
-  background: var(--color-surface-solid);
+  border: 1px solid var(--color-separator);
   color: var(--color-text-secondary);
-  box-shadow: var(--shadow-raised);
 }
 .scanButton {
   display: inline-flex;
@@ -209,7 +197,8 @@
 .content {
   max-width: var(--content-width);
   margin: 0 auto;
-  padding: var(--space-6) var(--space-6) var(--space-12);
+  /* Bottom room for the floating theme button in the corner. */
+  padding: var(--space-6) var(--space-6) calc(var(--toggle-size) + var(--space-4) + var(--space-8));
   outline: 0;
 }
 .phoneOnly,
@@ -269,6 +258,11 @@
   .phoneOnly {
     display: none;
   }
+  /* The tab bar and, above it, the theme button: the last line of content
+     can always scroll clear of both. */
+  .content {
+    padding-bottom: calc(var(--tabbar-height) + var(--space-3) + var(--toggle-size) + var(--space-3) + env(safe-area-inset-bottom) + var(--space-8));
+  }
   .phoneBrand {
     display: inline-flex;
   }
@@ -316,11 +310,9 @@
     font-weight: var(--weight-medium);
     text-decoration: none;
   }
+  /* The selected tab takes the accent colour, icon and label, as on iOS. */
   .tab[aria-current='page'] {
-    color: var(--color-text);
-  }
-  .tab[aria-current='page'] svg {
-    color: var(--color-brand-ink);
+    color: var(--color-accent-text);
   }
   .tabScan {
     justify-self: center;

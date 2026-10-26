@@ -38,7 +38,7 @@
   box-shadow: var(--shadow-2);
 }
 .selected {
-  box-shadow: 0 0 0 2px var(--color-brand), var(--shadow-1);
+  box-shadow: 0 0 0 2px var(--color-accent-text);
 }
 .kind {
   display: grid;

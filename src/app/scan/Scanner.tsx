@@ -196,7 +196,12 @@ export function Scanner({ onScan, hint, paused = false }: { onScan: (value: stri
         <>
           <div className={`${styles.viewport} ${flash ? styles.flash : ''}`}>
             <video ref={video} className={styles.video} muted playsInline />
-            <span className={styles.frame} aria-hidden="true" />
+            <span className={styles.frame} aria-hidden="true">
+              <span className={`${styles.corner} ${styles.tl}`} />
+              <span className={`${styles.corner} ${styles.tr}`} />
+              <span className={`${styles.corner} ${styles.bl}`} />
+              <span className={`${styles.corner} ${styles.br}`} />
+            </span>
             {camera !== 'scanning' && <span className={styles.overlay}>{status[camera]}</span>}
             {torch.available && (
               <span className={styles.torch}>

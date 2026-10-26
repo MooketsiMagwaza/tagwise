@@ -20,24 +20,26 @@
   height: 100%;
   object-fit: cover;
 }
-/* The aiming window: a soft dark surround and tag-amber corners. */
+/* The aiming window: a dark surround and tag-amber corner brackets, drawn
+   with borders (no gradients). */
 .frame {
   position: absolute;
   inset: 20% 16%;
   border-radius: var(--radius-md);
   box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.38);
-  background:
-    linear-gradient(#f2a516, #f2a516) top left / 28px 3px no-repeat,
-    linear-gradient(#f2a516, #f2a516) top left / 3px 28px no-repeat,
-    linear-gradient(#f2a516, #f2a516) top right / 28px 3px no-repeat,
-    linear-gradient(#f2a516, #f2a516) top right / 3px 28px no-repeat,
-    linear-gradient(#f2a516, #f2a516) bottom left / 28px 3px no-repeat,
-    linear-gradient(#f2a516, #f2a516) bottom left / 3px 28px no-repeat,
-    linear-gradient(#f2a516, #f2a516) bottom right / 28px 3px no-repeat,
-    linear-gradient(#f2a516, #f2a516) bottom right / 3px 28px no-repeat;
   pointer-events: none;
   transition: box-shadow var(--duration-fast) var(--ease);
 }
+.corner {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 0 solid #f2a516;
+}
+.tl { top: 0; left: 0; border-top-width: 3px; border-left-width: 3px; border-top-left-radius: var(--radius-md); }
+.tr { top: 0; right: 0; border-top-width: 3px; border-right-width: 3px; border-top-right-radius: var(--radius-md); }
+.bl { bottom: 0; left: 0; border-bottom-width: 3px; border-left-width: 3px; border-bottom-left-radius: var(--radius-md); }
+.br { bottom: 0; right: 0; border-bottom-width: 3px; border-right-width: 3px; border-bottom-right-radius: var(--radius-md); }
 .flash .frame {
   box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.38), inset 0 0 0 3px #f2a516;
 }

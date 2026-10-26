@@ -87,8 +87,8 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: var(--radius-md);
-  background: var(--color-brand-soft);
-  color: var(--color-brand-ink);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
 }
 .countText {
   flex: 1;
