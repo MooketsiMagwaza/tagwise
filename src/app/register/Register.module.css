@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  /* Room between the screen's header buttons and the saved views. */
+  margin-top: var(--space-3);
 }
 
 /* Saved views use the shared segmented control (src/ui/Segmented). */
