@@ -49,7 +49,16 @@ const SHOTS = [
     },
   },
   { name: 'count', path: '/app/counts/count-mochudi-t3', size: 'desktop' },
-  { name: 'sites', path: '/app/sites', size: 'desktop', settle: 6000 },
+  {
+    name: 'sites',
+    path: '/app/sites',
+    size: 'desktop',
+    settle: 2000,
+    // The basemap loads over the network; wait until the map says it is done.
+    before: async (page) => {
+      await page.waitForFunction(() => !document.body.innerText.includes('Loading the map'), null, { timeout: 25000 }).catch(() => {});
+    },
+  },
   { name: 'labels', path: '/app/labels?ids=MCT-00001,MCT-00002,MCT-00003,MCT-00004,MCT-00005,MCT-00006,MCT-00007', size: 'desktop' },
   { name: 'people', path: '/app/settings/people', size: 'desktop' },
   { name: 'phone-home', path: '/app', size: 'phone' },
