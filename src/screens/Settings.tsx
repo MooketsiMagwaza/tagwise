@@ -237,7 +237,7 @@ function AppearanceSection() {
         </div>
         <Switch
           label="Show simulated teammates"
-          description="Sample members shown as present on pages (dashed ring), so the shared workspace reads as shared in a one-person demo. Your own other tabs are always shown."
+          description="Sample members shown as present on pages (dashed ring), so shared-workspace states remain visible during a single-user preview. Your own other tabs are always shown."
           checked={sim}
           onChange={setSimulatedTeammates}
         />

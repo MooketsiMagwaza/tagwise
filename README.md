@@ -6,6 +6,28 @@ count a site with several people at once, and see every site on a map. Built
 for schools, clinics, offices and stores that keep their register in Excel
 today.
 
+## Why Tagwise exists
+
+Tagwise started with a pharmacy problem in my own family. My sister needed a
+practical way to track expiry dates, batches and bulk stock coming into the
+pharmacy, but the usual options bundled those basics into a paid point-of-sale
+subscription, separate extensions and a dedicated desktop setup. A spreadsheet
+was familiar and flexible, but it did not provide scanning, shared stock-takes,
+history, roles or reliable warnings before stock expired.
+
+The product keeps the parts people already understand—an Excel-like table,
+saved views, filters, bulk selection, and Excel/CSV import and export—then adds
+QR and barcode scanning, printable labels, batch and expiry fields, expiring
+stock alerts, stock movement history, multi-person counts and site maps. It is
+built as a browser application so a retailer, pharmacy, school, clinic or
+office can use the devices it already has instead of installing a dedicated
+desktop client.
+
+The long-term goal is an open-source alternative to recurring POS and add-on
+fees. The repository is public today, but it is still **all rights reserved**;
+an open-source licence must be selected before the project can truthfully be
+called open source.
+
 **Status: prototype.** The app runs entirely in the browser with a
 fictional sample organisation: no sign-in and no real data yet. Behind it
 sits a backend (five Rust services, a Docker stack with a gateway,
@@ -22,7 +44,7 @@ Every major surface, light and dark, captured from the running app with
 
 | | Light | Dark |
 | --- | --- | --- |
-| The public page | ![The public page: the headline, the Open the demo button and a large capture of the home screen in a window frame](public/screens/landing-light.webp) | ![The public page in the dark theme: the headline, the demo button and the home screen capture](public/screens/landing-dark.webp) |
+| The public page | ![The public page: the headline, the Open the app button and a large capture of the home screen in a window frame](public/screens/landing-light.webp) | ![The public page in the dark theme: the headline, the Open the app button and the home screen capture](public/screens/landing-dark.webp) |
 | Home | ![Home: items overdue and due back, low stock, a stock-take in progress, assets by site and recent activity](public/screens/dashboard-light.webp) | ![Home in the dark theme, with the floating theme button in the bottom right corner](public/screens/dashboard-dark.webp) |
 | The register | ![The register: saved views as a segmented control, search, filter and column buttons, and a table of 126 assets](public/screens/register-light.webp) | ![The register in the dark theme, with status pills and custodians in the table](public/screens/register-dark.webp) |
 | An asset and its QR label | ![An asset page: details, who has it and that it is overdue, its QR label with a print button, and comments](public/screens/asset-light.webp) | ![An asset page in the dark theme; the QR label stays black on white so it scans](public/screens/asset-dark.webp) |
@@ -37,7 +59,7 @@ On a phone:
 
 | The public page | Home | Register | Scan |
 | --- | --- | --- | --- |
-| ![The public page on a phone: the headline, the demo button and the home screen in a phone frame](public/screens/phone-landing-light.webp) | ![Home on a phone, with the floating tab bar and the theme button just above it on the left](public/screens/phone-home-light.webp) | ![The register on a phone: saved views as a segmented control and assets as cards](public/screens/phone-register-light.webp) | ![A scan result on a phone: the asset with its actions](public/screens/phone-scan-light.webp) |
+| ![The public page on a phone: the headline, the Open the app button and the home screen in a phone frame](public/screens/phone-landing-light.webp) | ![Home on a phone, with the floating tab bar and the theme button just above it on the left](public/screens/phone-home-light.webp) | ![The register on a phone: saved views as a segmented control and assets as cards](public/screens/phone-register-light.webp) | ![A scan result on a phone: the asset with its actions](public/screens/phone-scan-light.webp) |
 | ![The public page on a phone, dark](public/screens/phone-landing-dark.webp) | ![Home on a phone, dark](public/screens/phone-home-dark.webp) | ![The register on a phone, dark](public/screens/phone-register-dark.webp) | ![A scan result on a phone, dark](public/screens/phone-scan-dark.webp) |
 
 The screenshots are of the sample workspace: the trust, the people and every
@@ -45,7 +67,7 @@ figure are invented, and the app says so on screen. Each capture is saved as
 WebP (used here and on the public page) and as JPEG (mirrored by the docs
 site); every file is under 150 KB.
 
-## What is real, and what is demo
+## What works and what remains
 
 | Area | State |
 | --- | --- |
@@ -53,11 +75,12 @@ site); every file is under 150 KB.
 | Asset and stock pages: edit, check out and in, issue and receive, comments, history | Works in the browser |
 | Shared editing | A stale edit is caught (version check) and you choose which version to keep. Shown working between two tabs |
 | Live updates and presence | Real between tabs of the same browser (BroadcastChannel). Across devices it needs the app connected to the server, which is not done yet |
-| Simulated teammates | Demo only: sample members shown as present (dashed ring) and an optional simulated counter in stock-takes. Labelled on screen and can be switched off |
+| Simulated teammates | Sample members shown as present (dashed ring) and an optional simulated counter in stock-takes. Marked on screen and can be switched off |
 | Scanning | Typed codes and handheld scanners work. Camera decoding (BarcodeDetector, with ZXing as the fallback) is built but **not yet tested on a real phone** |
 | QR labels | A4 sheets of 18 and single labels render with working QR codes. **Not yet printed and scanned from paper** |
 | Excel and CSV import | Works with the practice register: column matching, row checks, duplicates, problem report |
 | Excel and CSV export | Built, with a formula guard. The files were not opened in a spreadsheet program during testing |
+| Batch and expiry tracking | Stock lines store a batch and expiry date; the table highlights expired and near-expiry dates, the dashboard calls out batches expiring within 60 days, and a saved view isolates expiring stock |
 | Stock-takes | Works in the browser (tried with the simulated counter, typed scans, repeats and unknown codes). Updates between tabs use the same mechanism that was shown working for edits |
 | Sites map | Works with an internet connection (OpenFreeMap tiles) |
 | Roles | Owner, admin, editor, auditor, viewer. Enforced in the interface only; the register service enforces the same table, but the app does not use it yet |
