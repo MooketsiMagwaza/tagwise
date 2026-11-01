@@ -132,7 +132,7 @@ function TopBar() {
         </nav>
         <div className={styles.topEnd}>
           <Cta href="/app" size="sm">
-            Open the demo
+            Open the app
           </Cta>
           <button type="button" className={styles.menuButton} aria-expanded={open} aria-controls="site-menu" onClick={() => setOpen((o) => !o)}>
             {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
@@ -147,7 +147,7 @@ function TopBar() {
               {s.label}
             </a>
           ))}
-          <Cta href="/app">Open the demo</Cta>
+          <Cta href="/app">Open the app</Cta>
         </nav>
       )}
     </header>
@@ -198,7 +198,7 @@ function SectionNav() {
         </nav>
         <span className={styles.secnavCta}>
           <Cta href="/app" size="sm">
-            Open the demo
+            Open the app
           </Cta>
         </span>
       </div>
@@ -343,11 +343,11 @@ const FAQ: { id: string; q: string; a: ReactNode }[] = [
   {
     id: 'faq-account',
     q: 'Do I need an account to try it?',
-    a: 'No. The demo opens straight into a sample workspace for an invented community trust. You choose a sample member to act as, so you can see the app through each role.',
+    a: 'No. The app opens into a sample workspace for an invented community trust. Choose a sample member to view the available roles.',
   },
   {
     id: 'faq-data',
-    q: 'Where is the demo’s data kept?',
+    q: 'Where is the sample workspace data kept?',
     a: 'In your browser’s local storage only. Nothing you do is sent anywhere, and the sample workspace can be reset from Settings.',
   },
   {
@@ -386,7 +386,7 @@ const FOOTER: { title: string; links: { label: string; href: string }[] }[] = [
       { label: 'Import', href: '#import' },
       { label: 'Stock-takes', href: '#stock-takes' },
       { label: 'Sites', href: '#sites' },
-      { label: 'Open the demo', href: '/app' },
+      { label: 'Open the app', href: '/app' },
     ],
   },
   {
@@ -468,12 +468,12 @@ export default function Landing() {
                 of passing a spreadsheet around.
               </p>
               <div className={styles.ctas}>
-                <Cta href="/app">Open the demo</Cta>
+                <Cta href="/app">Open the app</Cta>
                 <Cta href="#features" kind="secondary">
                   See the features
                 </Cta>
               </div>
-              <p className={styles.fine}>No sign-up. The demo runs in your browser on a sample workspace.</p>
+              <p className={styles.fine}>No sign-up. The sample workspace runs in your browser.</p>
             </div>
             <figure className={styles.heroShot}>
               <Window
@@ -533,7 +533,7 @@ export default function Landing() {
             <li>Stock lines are found by their barcode as well as their name</li>
             <li>Handheld scanners and typed codes work as they are</li>
           </ul>
-          <More href="/app/scan">Try the scanner in the demo</More>
+          <More href="/app/scan">Try the scanner</More>
         </FeatureRow>
 
         <FeatureRow
@@ -585,7 +585,7 @@ export default function Landing() {
             rooms and open the register filtered to it.
           </p>
           <p className={styles.small}>Map data © OpenStreetMap contributors, tiles by OpenFreeMap.</p>
-          <More href="/app/sites">See the sites in the demo</More>
+          <More href="/app/sites">See the sites</More>
         </FeatureRow>
 
         <FeatureRow
@@ -604,7 +604,7 @@ export default function Landing() {
             <li>A viewer reads and comments; an auditor runs stock-takes without changing the register</li>
             <li>Every change is recorded with who made it and when</li>
           </ul>
-          <More href="/app/assets/MCT-00040">Open an asset in the demo</More>
+          <More href="/app/assets/MCT-00040">Open an asset</More>
         </FeatureRow>
 
         <section id="under-the-hood" className={styles.section} aria-labelledby="hood-title">
@@ -615,14 +615,14 @@ export default function Landing() {
                 Built like a real system
               </h2>
               <p className={styles.lead}>
-                Behind the demo sits a complete back end in the same repository: five Rust services behind an nginx gateway, PostgreSQL with a database per
+                The repository also contains five Rust services behind an nginx gateway, PostgreSQL with a database per
                 service, Redis, an observability stack and a documentation site, all checked by continuous integration.
               </p>
             </div>
             <p className={styles.status}>
-              <span className={styles.chip}>Demo data</span>
+              <span className={styles.chip}>Sample workspace</span>
               <span>
-                The demo runs on a sample workspace in your browser. The services are built and tested, and start together as a development stack in Docker;
+                The app runs on a sample workspace in your browser. The services are built and tested, and start together as a development stack in Docker;
                 the app does not call them yet.
               </span>
             </p>
@@ -690,7 +690,7 @@ export default function Landing() {
             </h2>
             <p className={styles.lead}>Try a scan, an import and a stock-take. Nothing to install and no account.</p>
             <div className={styles.ctas}>
-              <Cta href="/app">Open the demo</Cta>
+              <Cta href="/app">Open the app</Cta>
               <Cta href={REPO} kind="secondary">
                 Read the code on GitHub
               </Cta>
@@ -718,7 +718,7 @@ export default function Landing() {
           <div className={styles.footBottom}>
             <Logo />
             <p>© 2026 Mooketsi Vincent Magwaza. All rights reserved.</p>
-            <p>The organisation, people and figures in the demo and its screenshots are invented.</p>
+            <p>The organisation, people and figures in the sample workspace and screenshots are invented.</p>
           </div>
         </div>
       </footer>

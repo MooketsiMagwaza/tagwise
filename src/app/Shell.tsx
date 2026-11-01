@@ -86,7 +86,7 @@ function Sidebar({ path, onNavigate }: { path: string; onNavigate?: () => void }
             <Avatar initials={me.initials} hue={me.hue} />
             <span className={styles.meText}>
               <span className={styles.meName}>{me.name}</span>
-              <span className={styles.meRole}>{me.role ? ROLE_LABEL[me.role] : ''} · you, in this demo</span>
+              <span className={styles.meRole}>{me.role ? ROLE_LABEL[me.role] : ''} · sample workspace</span>
             </span>
           </Link>
         )}
